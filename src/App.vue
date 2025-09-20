@@ -1,0 +1,47 @@
+<template>
+
+  <MIDIConsole />
+  <div class= "container">
+    <Keyboard
+      :start-octave="4"
+      :octaves="2"
+      :layout="'x66'"
+      :key="'x66Keyboard'"
+      :id="'x66Keyboard'"
+    />
+    <Keyboard 
+      :start-octave="4"
+      :octaves="2"
+      :layout="'x75'"
+      :key="'x75Keyboard'"
+      :id="'x75Keyboard'"
+    />
+
+</div>
+</template>
+
+<script setup>
+import { useStore } from './store';
+import MIDIConsole from './components/MIDIConsole.vue';
+import Keyboard from './components/Keyboard.vue';
+
+import ShortcutManager from './utils/ShortcutManager.js';
+
+const store= useStore();
+const shortcutManager= new ShortcutManager(store);
+shortcutManager.init();
+
+</script>
+
+<style>
+  .container{
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .container > div {
+    margin-bottom: 40px;
+  }
+</style>
