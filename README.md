@@ -1,18 +1,22 @@
+## Features
 
+- 6/6 Piano Keyboard GUI
+	- Strict White/Black Keys alternating
+	- Isomorphic layout: intervals and chords retain their shapes
+- 7/5 Piano Keyboard GUI
+- Keyboard Input
+- MIDI Input
+- Centralized API object
+- Sustained notes mode
+- Range settings (lowest/highest notes)
+- Triads recognition regardless of inversions
+	- Chord quality discrimination (Minor, Major, Diminished, Augmented)
+- Chord Relationship interpretation
+	- Previous chord is stored and compared against current chord
+	- Chord Relationships are displayed as \[Root Chord Quality]\[Interval]\[Target Chord Quality]
 
-## TECH
+## Tech Stack
 
 - Vue.js
 - Pinia Store
 - Vite
-
-
-- Representation of a piano keyboard
-	- Flat colors minimalist design, just black and white rectangles
-	- But, instead of 7/5 layout, we use 6/6 layout. Meaning each white key is followed by a black key, and vice versa, no gap. 
-- The representation should adapt to its container in a responsive manner. 
-- Number of octaves should be adjustable in the code
-- Each key should have a property with their MIDI number equivalent
-
-
-Ref: https://github.com/toriphes/vue-piano/tree/master
