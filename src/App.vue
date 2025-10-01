@@ -1,6 +1,7 @@
 <template>
 
   <MIDIConsole />
+  <Analyzer />
   <div class= "container">
     <Keyboard
       :start-octave="4"
@@ -24,6 +25,7 @@
 import { useStore } from './store';
 import MIDIConsole from './components/MIDIConsole.vue';
 import Keyboard from './components/Keyboard.vue';
+import Analyzer from './components/Analyzer.vue';
 
 import ShortcutManager from './utils/ShortcutManager.js';
 
