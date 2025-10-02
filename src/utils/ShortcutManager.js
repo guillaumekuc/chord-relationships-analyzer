@@ -3,7 +3,6 @@ import Convert from './Convert.js';
 export default class ShortcutManager {
 	constructor(store) {
 		this.$store=store;
-		console.log(this.$store);
 	}
 
 	init (){
@@ -40,8 +39,13 @@ export default class ShortcutManager {
 	}
 
 	handleKeyUp = (e) => {
+
 	  const midi = Convert.keyToMidi(e.key.toLowerCase());
 	  if (!midi){return}
+	  if (this.$store.config.sustain){ 
+	  	console.log('sustain active');
+	  	return 
+	  } 
 	  this.$store.player.ReleaseNote(midi);
 	}
 }

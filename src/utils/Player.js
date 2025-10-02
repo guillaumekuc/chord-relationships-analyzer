@@ -13,8 +13,8 @@ export default class Player {
 	}
 
 	ReleaseNote(midi){
-
-		if (this.$store.config.sustain){ return };
+		if (this.$store.config.sustain){ return } 
 		this.$store.performance.noteOff(midi);
+		
 	}
 }

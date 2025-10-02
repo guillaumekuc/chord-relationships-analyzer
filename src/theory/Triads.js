@@ -1,4 +1,6 @@
 import * as Common from "./common.js";
+import Notes from "./Notes.js";
+import Helpers from "../utils/Helpers.js";
 
 export default class Triads {
 
@@ -10,6 +12,7 @@ export default class Triads {
 	}
 
 	static fromScale(scale){
+		//returns all triads contained in a scale
 		const triads = [];
 
 		for (let i = 0; i < scale.pitchClasses.length; i++) {
@@ -46,4 +49,50 @@ export default class Triads {
 		return triads;		
 	}
 
+	static fromNotes(notes){
+		Helpers.assert(Array.isArray(notes), "Expected an array"); 
+		if (notes.length !== 3) {
+			return null;
+		}
+
+		//return a chord object if the provided notes match a known triad type
+		let chord={
+			root: undefined,
+			quality: undefined,
+			name: undefined,
+		};
+
+
+		const pitchClasses=notes.map(note=> Common.modulo12(note));
+
+		//check each inversion of the chord against known Triads types
+		let found;
+
+		for (let i=0; i< pitchClasses.length && !found; i++){ 
+		  const rootPC=pitchClasses[i];
+		  const normalized=pitchClasses.map(PC => Common.modulo12(PC-rootPC));
+
+		  // Sort ascending
+		  normalized.sort((a, b) => a - b);
+
+		  found=Object.keys(this.types).some(type => {
+		    if (Helpers.arraysEqual(this.types[type].pitchClasses, normalized)) {    
+		      chord.root = rootPC;
+		      chord.rootName= Notes.fromPitchClass(chord.root);
+		      chord.quality = type;
+		      chord.name = chord.rootName + this.types[chord.quality].symbol;
+		      chord.pitchClasses= pitchClasses;
+
+		      return true
+		    }
+		    return false;
+		  });
+		}
+
+		return found ? chord : null;
+
+	}
+
+
 }
+

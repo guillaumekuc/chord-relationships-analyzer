@@ -2,18 +2,41 @@ import { defineStore } from 'pinia'
 
 export const usePerformanceStore = defineStore('performance', {
   state: () => ({
-    activeNotes: {},
-    passiveNotes: {},
+    active: {
+      notes: {},
+      chord: null,
+      cr: undefined,
+    },
+    passive: {
+      notes: {},
+      chord: null,
+    },
   }),
   actions: {
     noteOn(note) {
-      this.activeNotes[note] = true
+      this.active.notes[note] = true;
     },
     noteOff(note) {
-      delete this.activeNotes[note]
+      if (this.active.chord) {
+        this.passive.chord=this.active.chord;
+        this.passive.notes=this.active.notes;
+        this.active.chord=null;
+      }
+
+      delete this.active.notes[note];
+      this.active.cr=null;
+
     },
     reset() {
-      this.activeNotes = {}
+      if (this.active.chord) {
+        this.passive.chord=this.active.chord;
+        this.passive.notes=this.active.notes;
+        this.active.chord=null;
+      }
+
+      this.active.notes = {}
+      this.active.cr=null;
+
     }
   }
 })

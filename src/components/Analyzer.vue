@@ -4,7 +4,9 @@
   <div class="analyzer">
   
     <h1>ANALYZER</h1>
-    <span>{{testConst}}</span>
+    <span>{{store.performance.active?.cr ?? "—"}}</span>
+    <span>{{store.performance.active.chord?.name ?? "—"}}</span>
+    <span>({{store.performance.passive.chord?.name ?? "—"}})</span>
 
   </div>
 </template>
@@ -13,60 +15,42 @@
 
   import { useStore } from '../store';
   import { computed } from 'vue';
+  import { watch } from 'vue';
   import Triads from "../theory/Triads.js";
   import Notes from "../theory/Notes.js";
   import * as Common from "../theory/common.js";
+  import Helpers from "../utils/Helpers.js";
+  import Intervals from "../theory/Intervals.js";
 
   const store = useStore();
 
-  const triad = computed(() => Object.entries(store.performance.activeNotes).length === 3);
+  const triad = computed(() => Object.entries(store.performance.active.notes).length === 3);
   const triadTypes=Triads.types;
-  const testConst= computed(()=> test(store.performance.activeNotes))
 
+  watch(() => store.performance.active.notes, computeChord, { deep: true, immediate: true });
 
-  function test(activeNotes) {
-    let root=undefined;
-    let quality=undefined;
-    let string=undefined;
-
-    //Get Pich Classes from notes using modulo 12 operations
-    const activePCs= Object.keys(activeNotes).map(note => Common.modulo12(note));
-
-    //check each inversion of the chord against known Triads types
-    for (let i=0; i<activePCs.length; i++){ 
-      const rootPC=activePCs[i];
-      const normalized=activePCs.map(PC => Common.modulo12(PC-rootPC));
-
-      // Sort ascending
-      normalized.sort((a, b) => a - b);
-
-      Object.keys(Triads.types).some(type => {
-        if (arraysEqual(Triads.types[type].pitchClasses, normalized)) {
-          console.log('match');
-          
-          root = Notes.fromPitchClass(activePCs[i]);
-          quality = type;
-
-          return true;
-        }
-        return false;
-      });
+  function computeChord(activeNotes) {
+    const chord=Triads.fromNotes(Object.keys(activeNotes));
+    store.performance.active.chord=chord;
+    if (store.performance.active.chord && store.performance.passive.chord){
+      console.log(store.performance.active.chord, store.performance.passive.chord);
+      const cr = computeCR(store.performance.active.chord, store.performance.passive.chord);
+      store.performance.active.cr=cr
     }
-
-
-    if (root === undefined || quality === undefined){
-      string = "—";
-    } else {
-      string = root + Triads.types[quality].symbol;
-    }
-
-    return string
   }
 
+  function computeCR(activeChord, passiveChord) {
+    Helpers.assert(
+      activeChord.quality != null
+      && activeChord.root != null
+      && passiveChord.quality != null
+      && passiveChord.root != null
+      , activeChord);
+    const interval=Intervals.romans[Common.modulo12(activeChord.root - passiveChord.root)];
+    const quickString=`${passiveChord.quality} ${interval} ${activeChord.quality}`;
+    return quickString; 
 
-  function arraysEqual(arr1, arr2) {
-    if (arr1.length !== arr2.length) return false;
-    return arr1.every((val, index) => val === arr2[index]);
+
   }
 
 </script>

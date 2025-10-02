@@ -1,6 +1,6 @@
 <template>
   <div
-    :class="['piano-key', {'key-lower': !key.isUpper, 'key-upper': key.isUpper, 'key-white': !key.isBlack, 'key-black': key.isBlack, 'key-active': key.isActive }]"
+    :class="['piano-key', {'key-lower': !key.isUpper, 'key-upper': key.isUpper, 'key-white': !key.isBlack, 'key-black': key.isBlack, 'key-active': key.isActive, 'key-passive': key.isPassive}]"
     @mousedown="onPress"
     @mouseup="onRelease"
     @mouseleave="onRelease"
@@ -22,6 +22,7 @@ const key = defineProps({
   isUpper: { type: Boolean, default: false, required:true },
   isBlack: { type: Boolean, default: false, required:true},
   isActive: { type: Boolean, default: false },
+  isPassive: { type: Boolean, default: false}
 });
 
 // Bubble-up
@@ -46,6 +47,7 @@ function onRelease() {
  --light: #fff;
  --hover: #ffd700;
  --active: #f90;
+ --passive: #9f9f9f;
 
   display: inline-block;
   width: 40px; /* total= 44px w/ margins */
@@ -77,6 +79,10 @@ function onRelease() {
 
 .piano-key.key-active {
   background: var(--active) !important; 
+}
+
+.piano-key.key-passive {
+  background: var(--passive) !important; 
 }
 
 .note-label {
