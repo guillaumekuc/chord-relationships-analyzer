@@ -1,9 +1,13 @@
 <template>
+  <div class="Keyboard-container">
+  <KeyboardInspector
+    :parent="props.id"
+  />
   <div class="keyboard">
+
     <div
       v-for="(slot, idx) in slots"
-      :key="slot.lower"
-      class="white-slot"
+      class="slot"
     >
       <Key
         :note="slot.lower.note"
@@ -36,6 +40,7 @@
       />
     </div>
   </div>
+  </div>
 </template>
 
 
@@ -45,7 +50,8 @@
 import { computed } from 'vue';
 import { useStore } from '../store';
 
-import Key from './key.vue'; 
+import Key from './Key.vue'; 
+import KeyboardInspector from './KeyboardInspector.vue';
 
 import keymap from '../config/keymap.js';
 import keyboardRowPatterns from '../config/keyboardRowPatterns.js';
@@ -170,6 +176,14 @@ function onRelease(midi) {
 
 <style scoped>
 
+.Keyboard-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 2rem;
+}
+
 .keyboard {
   --dark: #222 ;
   display: flex;
@@ -181,17 +195,12 @@ function onRelease(midi) {
   width: fit-content;
 }
 
-.white-slot {
+.slot {
   position: relative;
   display: inline-block;
   width: fit-content;
 }
 
-.upper-overlay :deep(.key-upper) {
-}
 
-.white-slot :deep(.piano-key) {
-  vertical-align: top;
-}
 
 </style>

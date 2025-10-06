@@ -55,7 +55,7 @@
 
 </script>
 
-<style>
+<style scoped>
   .analyzer {
     display:flex;
     text-align: center;

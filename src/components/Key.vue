@@ -73,6 +73,14 @@ function onRelease() {
   cursor: pointer;
 }
 
+.piano-key.key-passive {
+  background: var(--passive) !important; 
+}
+
+.piano-key.key-active {
+  background: var(--active) !important; 
+}
+
 .piano-key:hover{
 	background: var(--hover) !important;
 }
@@ -89,13 +97,6 @@ function onRelease() {
  	background: var(--dark);
 }
 
-.piano-key.key-active {
-  background: var(--active) !important; 
-}
-
-.piano-key.key-passive {
-  background: var(--passive) !important; 
-}
 
 .note-label {
 	position: absolute; 
@@ -113,6 +114,24 @@ function onRelease() {
 	color: var(--light);
 }
 
+/*
+.key-black.key-lower:after{
+  pointer-events: none;
+  content: "";
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: white;
+  opacity: 0.1;
+  border-radius: 0 0 5px 5px;
+}
+*/
+
+.key-white.key-upper {
+ border: 3px solid #222;
+ border-radius: 0 0 7px 7px;
+ border-top: 0;
+}
 
 .keyboard-mapping-label {
   position: absolute; 

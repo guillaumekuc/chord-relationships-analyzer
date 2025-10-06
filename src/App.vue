@@ -4,11 +4,12 @@
   <Analyzer />
   <div class= "container">
     <Keyboard
-      :start-octave="4"
-      :octaves="2"
-      :layout="'x66'"
-      :key="'x66Keyboard'"
-      :id="'x66Keyboard'"
+      start-octave=4
+      octaves=2
+      layout='x66'
+      key='x66Keyboard'
+      id='x66Keyboard'
+      colors='x75'
     />
     <Keyboard 
       :start-octave="4"
@@ -16,6 +17,7 @@
       :layout="'x75'"
       :key="'x75Keyboard'"
       :id="'x75Keyboard'"
+
     />
 
 </div>
@@ -35,7 +37,7 @@ shortcutManager.init();
 
 </script>
 
-<style>
+<style scoped>
   .container{
     padding: 40px;
     display: flex;
@@ -43,7 +45,6 @@ shortcutManager.init();
     align-items: center;
   }
 
-  .container > div {
-    margin-bottom: 40px;
-  }
+
+
 </style>
