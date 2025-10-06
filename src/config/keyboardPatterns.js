@@ -1,19 +1,20 @@
 export default {
+  // u = upper row // l = lower row
   x66: [
-      { w: 'C',  b: 'D♭' },
-      { w: 'D',  b: 'E♭' },
-      { w: 'E',  b: 'F'  },
-      { w: 'G♭', b: 'G'  },
-      { w: 'A♭', b: 'A'  },
-      { w: 'B♭', b: 'B'  },
+      { l: 'C',  u: 'D♭' },
+      { l: 'D',  u: 'E♭' },
+      { l: 'E',  u: 'F'  },
+      { l: 'G♭', u: 'G'  },
+      { l: 'A♭', u: 'A'  },
+      { l: 'B♭', u: 'B'  },
     ],
   x75: [
-    { w: 'C', b: 'D♭' },
-    { w: 'D', b: 'E♭' },
-    { w: 'E', b: null },
-    { w: 'F', b: 'G♭' },
-    { w: 'G', b: 'A♭' },
-    { w: 'A', b: 'B♭' },
-    { w: 'B', b: null },
+    { l: 'C', u: 'D♭' },
+    { l: 'D', u: 'E♭' },
+    { l: 'E', u: null },
+    { l: 'F', u: 'G♭' },
+    { l: 'G', u: 'A♭' },
+    { l: 'A', u: 'B♭' },
+    { l: 'B', u: null },
   ]
 }

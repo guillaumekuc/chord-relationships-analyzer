@@ -92,17 +92,17 @@ const slots = computed(() => {
 
       const wMidi=octaveMidi+offset;
       const lower = { 
-        note: `${pattern.value[i].w}${octave}`, 
+        note: `${pattern.value[i].l}${octave}`, 
         midi: wMidi,
         frequency: Convert.midiToHz(wMidi),
       };
       offset++;
 
       let upper=null;
-      if (pattern.value[i].b){
+      if (pattern.value[i].u){
         const bMidi=octaveMidi+offset;
         upper = { 
-          note: `${pattern.value[i].b}${octave}`,
+          note: `${pattern.value[i].u}${octave}`,
           midi: bMidi,
           frequency: Convert.midiToHz(bMidi),
         }
@@ -116,7 +116,7 @@ const slots = computed(() => {
   //final white key to close the pattern
 
   const octaveEndMidi= 12 * (octaveEnd +1);
-  const last= `${pattern.value[0].w}${octaveEnd}`;
+  const last= `${pattern.value[0].l}${octaveEnd}`;
 
   slots.push({
     lower: {
