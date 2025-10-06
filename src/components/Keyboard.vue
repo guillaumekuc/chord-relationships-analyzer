@@ -14,6 +14,7 @@
         :is-black="slot.lower.color==='b' ? true : false"
         :is-active="store.performance.active.notes[slot.lower.midi]"
         :is-passive="store.performance.passive.notes[slot.lower.midi]"
+        :parent="props.id"
         @press="onPress"
         @release="onRelease"
       />
@@ -28,6 +29,7 @@
         :is-black="slot.upper.color==='b' ? true : false"
         :is-active="store.performance.active.notes[slot.upper.midi]"
         :is-passive="store.performance.passive.notes[slot.upper.midi]"
+        :parent="props.id"
         class="upper-overlay"
         @press="onPress"
         @release="onRelease"
@@ -59,11 +61,17 @@ const props = defineProps({
   layout: { type: String, default: 'x66'},
   colors: {type: String, default: 'x75'},
   id: {type: String, default: 'something'},
+  displayNoteLabels: {type: Boolean, default: true},
+  displayKeyboardLabels: {type: Boolean, default: false},
 })
 
 store.instruments[props.id]={
   layout: props.layout,
   colors: props.colors,
+  display: {
+    noteLabels: props.displayNoteLabels,
+    keyboardLabels: props.displayKeyboardLabels,
+  }
 }
 
 console.log(props);

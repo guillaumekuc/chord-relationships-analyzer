@@ -7,13 +7,15 @@
     @touchstart.prevent="onPress"
     @touchend.prevent="onRelease"
   >
-    <span class="keyboard-mapping-label">{{ key.keyboard }}</span>
-    <span class="note-label">{{ key.note }}</span>
+    <span :class="{ hidden: !store.instruments[key.parent].display.keyboardLabels }" class="keyboard-mapping-label">{{ key.keyboard }}</span>
+    <span :class="{ hidden: !store.instruments[key.parent].display.noteLabels }" class="note-label">{{ key.note }}</span>
   </div>
 </template>
 
 <script setup>
 import { ref, toRefs, watch } from 'vue';
+import { useStore } from '../store';
+const store = useStore();
 
 // Props
 const key = defineProps({
@@ -24,7 +26,8 @@ const key = defineProps({
   isUpper: { type: Boolean, default: false, required:true },
   isBlack: { type: Boolean, default: false, required:true},
   isActive: { type: Boolean, default: false },
-  isPassive: { type: Boolean, default: false}
+  isPassive: { type: Boolean, default: false},
+  parent: {type: String, required: true},
 });
 
 console.log(key);
@@ -45,6 +48,11 @@ function onRelease() {
 </script>
 
 <style scoped>
+
+.hidden {
+  display: none !important;
+}
+
 .piano-key {
  /* color vars */
  --dark: #222;
