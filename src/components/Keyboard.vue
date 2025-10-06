@@ -10,7 +10,7 @@
         :midi="slot.lower.midi"
         :frequency="slot.lower.frequency"
         :is-upper="false"
-        :is-black="false"
+        :is-black="slot.lower.color==='b' ? true : false"
         :is-active="store.performance.active.notes[slot.lower.midi]"
         :is-passive="store.performance.passive.notes[slot.lower.midi]"
         @press="onPress"
@@ -23,7 +23,7 @@
         :midi="slot.upper.midi"
         :frequency="slot.upper.frequency"
         :is-upper="true"
-        :is-black="true"
+        :is-black="slot.upper.color==='b' ? true : false"
         :is-active="store.performance.active.notes[slot.upper.midi]"
         :is-passive="store.performance.passive.notes[slot.upper.midi]"
         class="upper-overlay"
@@ -44,7 +44,8 @@ import { useStore } from '../store';
 import Key from './key.vue'; 
 
 import keymap from '../config/keymap.js';
-import keyboardPatterns from '../config/keyboardPatterns.js';
+import keyboardRowPatterns from '../config/keyboardRowPatterns.js';
+import keyboardColorPatterns from '../config/keyboardColorPatterns.js';
 
 import Convert from '../utils/Convert.js';
 
@@ -54,19 +55,24 @@ const props = defineProps({
   startOctave: { type: Number, default: 3 },
   octaves: { type: Number, default: 2 },
   layout: { type: String, default: 'x66'},
+  colors: {type: String, default: 'x75'},
   id: {type: String, default: 'something'},
 })
 
 store.instruments[props.id]={
   layout: props.layout,
+  colors: props.colors,
 }
 
 console.log(props);
 
 const layout= computed(()=> store.instruments[props.id].layout);
-console.log(layout);
+const colors= computed(()=> store.instruments[props.id].colors);
+console.log("colors:", colors);
 
-const pattern = computed (()=> keyboardPatterns[layout.value]);
+const pattern = computed (()=> keyboardRowPatterns[layout.value]);
+const colorPattern= computed(()=> keyboardColorPatterns[colors.value]); //@WIP
+console.log("colorPattern:", colorPattern);
 const midiToKey = computed (()=> keymap[layout.value]) ;
 
 const emit = defineEmits(['press', 'release']); //bubble-up
@@ -95,8 +101,12 @@ const slots = computed(() => {
         note: `${pattern.value[i].l}${octave}`, 
         midi: wMidi,
         frequency: Convert.midiToHz(wMidi),
+        color: colorPattern.value[offset],
       };
+
+
       offset++;
+
 
       let upper=null;
       if (pattern.value[i].u){
@@ -105,6 +115,7 @@ const slots = computed(() => {
           note: `${pattern.value[i].u}${octave}`,
           midi: bMidi,
           frequency: Convert.midiToHz(bMidi),
+          color: colorPattern.value[offset],
         }
         offset++
       }
@@ -126,6 +137,7 @@ const slots = computed(() => {
     }, 
     upper: null});
 
+  console.log(slots);
   return slots
 })
 
