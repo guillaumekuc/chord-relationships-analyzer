@@ -7,6 +7,7 @@
     >
       <Key
         :note="slot.lower.note"
+        :keyboard="slot.lower.keyboard"
         :midi="slot.lower.midi"
         :frequency="slot.lower.frequency"
         :is-upper="false"
@@ -20,6 +21,7 @@
       <Key
         v-if="slot.upper"
         :note="slot.upper.note"
+        :keyboard="slot.upper.keyboard"
         :midi="slot.upper.midi"
         :frequency="slot.upper.frequency"
         :is-upper="true"
@@ -96,12 +98,14 @@ const slots = computed(() => {
 
       const octaveMidi = 12 * (octaveStart + o + 1); //C0 => 0, C4 => 12 * (4 + 1) = 60
 
-      const wMidi=octaveMidi+offset;
+      const lMidi=octaveMidi+offset;
       const lower = { 
         note: `${pattern.value[i].l}${octave}`, 
-        midi: wMidi,
-        frequency: Convert.midiToHz(wMidi),
+        midi: lMidi,
+        frequency: Convert.midiToHz(lMidi),
         color: colorPattern.value[offset],
+        keyboard: midiToKey.value[lMidi],
+
       };
 
 
@@ -110,12 +114,13 @@ const slots = computed(() => {
 
       let upper=null;
       if (pattern.value[i].u){
-        const bMidi=octaveMidi+offset;
+        const uMidi=octaveMidi+offset;
         upper = { 
           note: `${pattern.value[i].u}${octave}`,
-          midi: bMidi,
-          frequency: Convert.midiToHz(bMidi),
+          midi: uMidi,
+          frequency: Convert.midiToHz(uMidi),
           color: colorPattern.value[offset],
+          keyboard: midiToKey.value[uMidi],
         }
         offset++
       }

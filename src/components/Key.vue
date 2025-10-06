@@ -7,6 +7,7 @@
     @touchstart.prevent="onPress"
     @touchend.prevent="onRelease"
   >
+    <span class="keyboard-mapping-label">{{ key.keyboard }}</span>
     <span class="note-label">{{ key.note }}</span>
   </div>
 </template>
@@ -18,12 +19,15 @@ import { ref, toRefs, watch } from 'vue';
 const key = defineProps({
   note: { type: String, required: true },
   midi: { type: Number, required: true},
+  keyboard: { type: String},
   frequency: {type: Number, required: true},
   isUpper: { type: Boolean, default: false, required:true },
   isBlack: { type: Boolean, default: false, required:true},
   isActive: { type: Boolean, default: false },
   isPassive: { type: Boolean, default: false}
 });
+
+console.log(key);
 
 // Bubble-up
 const emit = defineEmits(['press', 'release']);
@@ -97,7 +101,25 @@ function onRelease() {
 	color: var(--dark); 
 }
 
-.key-black .note-label { 
+.key-black .note-label  { 
 	color: var(--light);
+}
+
+
+.keyboard-mapping-label {
+  position: absolute; 
+  bottom: calc(6px + 1rem); 
+  left: 50%; 
+  transform: translateX(-50%); 
+  font-size: 10px;  
+  opacity: 0.5;
+}
+
+.key-white .keyboard-mapping-label { 
+  color: var(--dark); 
+}
+
+.key-black .keyboard-mapping-label  { 
+  color: var(--light);
 }
 </style>
