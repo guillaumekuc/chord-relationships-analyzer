@@ -3,6 +3,7 @@ console.log('main.js loaded');
 import { createApp } from 'vue';
 import { createPinia } from 'pinia';
 import App from './App.vue';
+import './styles/variables.css';
 
 import { useStore } from './store';
 

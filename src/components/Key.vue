@@ -54,18 +54,12 @@ function onRelease() {
 }
 
 .piano-key {
- /* color vars */
- --dark: #222;
- --light: #fff;
- --hover: #ffd700;
- --active: #f90;
- --passive: #9f9f9f;
 
   display: inline-block;
   width: 40px; /* total= 44px w/ margins */
   height: 160px;
   margin: 0 2px; 
-  background: var(--light);
+  background: var(--color-light);
   border-radius: 0 0 5px 5px;
   box-sizing: border-box;
   position: relative;
@@ -74,15 +68,15 @@ function onRelease() {
 }
 
 .piano-key.key-passive {
-  background: var(--passive) !important; 
+  background: var(--color-passive) !important; 
 }
 
 .piano-key.key-active {
-  background: var(--active) !important; 
+  background: var(--color-active) !important; 
 }
 
 .piano-key:hover{
-	background: var(--hover) !important;
+	background: var(--color-hover) !important;
 }
 
 .key-upper {
@@ -94,7 +88,7 @@ function onRelease() {
 }
 
 .key-black {
- 	background: var(--dark);
+ 	background: var(--color-darker);
 }
 
 
@@ -107,28 +101,15 @@ function onRelease() {
 }
 
 .key-white .note-label { 
-	color: var(--dark); 
+	color: var(--color-dark); 
 }
 
 .key-black .note-label  { 
-	color: var(--light);
+	color: var(--color-light);
 }
 
-/*
-.key-black.key-lower:after{
-  pointer-events: none;
-  content: "";
-  display: block;
-  width: 100%;
-  height: 100%;
-  background: white;
-  opacity: 0.1;
-  border-radius: 0 0 5px 5px;
-}
-*/
-
-.key-white.key-upper {
- border: 3px solid #222;
+.key-upper {
+ border: 3px solid var(--color-dark);
  border-radius: 0 0 7px 7px;
  border-top: 0;
 }
@@ -143,10 +124,10 @@ function onRelease() {
 }
 
 .key-white .keyboard-mapping-label { 
-  color: var(--dark); 
+  color: var(--color-dark); 
 }
 
 .key-black .keyboard-mapping-label  { 
-  color: var(--light);
+  color: var(--color-light);
 }
 </style>

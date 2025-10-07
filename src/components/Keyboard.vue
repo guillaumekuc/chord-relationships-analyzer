@@ -185,12 +185,12 @@ function onRelease(midi) {
 }
 
 .keyboard {
-  --dark: #222 ;
+
   display: flex;
   position: relative;
   user-select: none;
   padding: 8px;
-  background: var(--dark);
+  background: var(--color-dark);
   border-radius: 8px;
   width: fit-content;
 }
