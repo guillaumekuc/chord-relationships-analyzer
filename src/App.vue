@@ -1,6 +1,7 @@
 <template>
 
   <MIDIConsole />
+  <ConfigInspector />
   <Analyzer />
   <div class= "container">
     <Keyboard
@@ -28,6 +29,7 @@ import { useStore } from './store';
 import MIDIConsole from './components/MIDIConsole.vue';
 import Keyboard from './components/Keyboard.vue';
 import Analyzer from './components/Analyzer.vue';
+import ConfigInspector from './components/ConfigInspector.vue';
 
 import ShortcutManager from './utils/ShortcutManager.js';
 
