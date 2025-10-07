@@ -1,4 +1,5 @@
 import Convert from './Convert.js';
+import keymap from '../config/keymap.js';
 
 export default class ShortcutManager {
 	constructor(store) {
@@ -30,7 +31,8 @@ export default class ShortcutManager {
 	    this.$store.performance.reset();
 	  }
 
-	  const midi = Convert.keyToMidi(e.key.toLowerCase());
+	  const map = keymap[this.$store.config.keymap];
+	  const midi = Convert.keyToMidi(e.key.toLowerCase(), map);
 	  if (!midi){return}
 
 	  console.log(e);
@@ -39,8 +41,8 @@ export default class ShortcutManager {
 	}
 
 	handleKeyUp = (e) => {
-
-	  const midi = Convert.keyToMidi(e.key.toLowerCase());
+	  const map = keymap[this.$store.config.keymap];
+	  const midi = Convert.keyToMidi(e.key.toLowerCase(), map);
 	  if (!midi){return}
 	  if (this.$store.config.sustain){ 
 	  	console.log('sustain active');

@@ -89,7 +89,7 @@ console.log("colors:", colors);
 const pattern = computed (()=> keyboardRowPatterns[layout.value]);
 const colorPattern= computed(()=> keyboardColorPatterns[colors.value]); //@WIP
 console.log("colorPattern:", colorPattern);
-const midiToKey = computed (()=> keymap[layout.value]) ;
+const midiToKey = computed (()=> keymap[store.config.keymap]) ;
 
 const emit = defineEmits(['press', 'release']); //bubble-up
 

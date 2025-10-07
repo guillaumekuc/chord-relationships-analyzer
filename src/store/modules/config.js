@@ -5,6 +5,7 @@ export const useConfigStore = defineStore('config', {
     sustain: true,
     octaveStart: 4,
     octaveEnd: 6,
+    keymap: 'x66',
   }),
   actions: {
     
