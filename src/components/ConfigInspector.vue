@@ -2,6 +2,8 @@
 	<section class="ConfigInspector">
 Keymap: <button @click="cycleKeymaps">{{store.config.keymap}} </button>
 Sustain <button @click="store.config.sustain= !store.config.sustain"> {{store.config.sustain}}</button>
+Fadeout: <button @click="store.config.fadeout = !store.config.fadeout"> {{store.config.fadeout}} </button>
+Autotrigger: <button @click="store.config.autotrigger = !store.config.autotrigger"> {{ store.config.autotrigger }}</button>
 
 	</section>
 
