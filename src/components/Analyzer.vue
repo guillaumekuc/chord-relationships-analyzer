@@ -83,7 +83,7 @@
     justify-content: center;
     align-items: center;
     font-weight: bold;
-
+    height: 120px;
   }
 
   .cr-container {
