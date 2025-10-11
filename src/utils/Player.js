@@ -9,7 +9,7 @@ export default class Player {
 		switch(this.$store.config.sustain){
 			case true:
 				
-				if (Object.keys(this.$store.performance.active.notes).includes(midi.toString())){
+				if (this.$store.performance.active.notes.has(midi)){
 					this.$store.performance.noteOff(midi);
 				} else {
 					this.$store.performance.noteOn(midi);
