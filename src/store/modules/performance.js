@@ -21,36 +21,51 @@ export const usePerformanceStore = defineStore('performance', {
   actions: {
     noteOn(note) {
       const config= useConfigStore();
-
       this.active.notes[note] = true;
+
       computeChord(this);
       if (config.autotrigger){
-        if (this.active.chord) {
-          copyActiveToPassive(this);
-          clearActive(this);
-        }
+        this.validate();
       }   
 
     },
     noteOff(note) {
-      if (this.active.chord) {
-        copyActiveToPassive(this);
-
-      }
+      const config= useConfigStore();
 
       delete this.active.notes[note];
+      computeChord(this);
 
-      if (Object.keys(this.active.notes).length === 0) {
-        this.active.cr = null;
+      if (config.autotrigger){
+        this.validate();
+      }
+
+    },
+
+    validate() {
+      if (this.active.chord) {
+        copyActiveToPassive(this);
+        clearActive(this);
+      } else {
+        console.log('invalid chord');
       }
     },
 
     reset() {
-      if (this.active.chord) {
-        copyActiveToPassive(this);
-      }
-
       clearActive(this);
+      clearPassive(this);
+    },
+
+    clearLast() {
+      const config=useConfigStore();
+
+      const lastKey = Object.keys(this.active.notes).pop(); 
+      delete this.active.notes[lastKey]; 
+
+      computeChord(this);
+
+      if(config.autotrigger){
+        this.validate();
+      }
     }
   }
 })
@@ -63,6 +78,8 @@ export const usePerformanceStore = defineStore('performance', {
       console.log(performance.active.chord, performance.passive.chord);
       const cr = computeCR(performance.active.chord, performance.passive.chord);
       performance.active.cr=cr;
+    } else {
+      performance.active.cr=null;
     }
   }
 
@@ -81,6 +98,9 @@ export const usePerformanceStore = defineStore('performance', {
 
 
 function copyActiveToPassive(performance){
+  const config=useConfigStore();
+
+
   console.log('copyActiveToPassive');
   console.log(performance.active);
   performance.passive.chord = performance.active.chord;
@@ -88,12 +108,12 @@ function copyActiveToPassive(performance){
   performance.passive.notes = { ...performance.active.notes };
   performance.active.chord = null; 
 
-  setPassiveTimeout(performance);
+  if (config.fadeout){
+    setPassiveTimeout(performance, config.fadeoutDuration);
+  }
 }
 
-function setPassiveTimeout(performance) {
-  const config=useConfigStore();
-
+function setPassiveTimeout(performance, duration) {
   if (performance.passive.timeout) {
         clearTimeout(performance.passive.timeout)
         performance.passive.timeout = null
@@ -105,7 +125,7 @@ function setPassiveTimeout(performance) {
     setPassivetimeout(performance);
    }
 
-  }, config.passiveTimeout)
+  }, duration)
 }
 
 function clearActive(performance){

@@ -19,16 +19,18 @@ export default class ShortcutManager {
 	handleKeyDown = (e) =>  {
 	  if (e.repeat) { return };
 
-	  if (e.key==='Escape' || e.key==='Esc' || e.key==="Enter" ){
+	  if (e.key==="Enter") {
+	  	this.$store.performance.validate();
+	  }
+
+	  if (e.key==='Escape' || e.key==='Esc' ){
 	    console.log('escape');
-	    //clearActiveNotes();
-	    console.log(this.$store);
 	    this.$store.performance.reset();
 	  }
 	  if (e.key==='Backspace' || e.key==="Delete"){
 	    console.log('backspace');
 	    //clearLastActive();
-	    this.$store.performance.reset();
+	    this.$store.performance.clearLast();
 	  }
 
 	  const map = keymap[this.$store.config.keymap];

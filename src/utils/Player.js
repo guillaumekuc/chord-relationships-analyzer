@@ -6,13 +6,28 @@ export default class Player {
 	}
 
 	PressNote(midi) {
+		switch(this.$store.config.sustain){
+			case true:
+				
+				if (Object.keys(this.$store.performance.active.notes).includes(midi.toString())){
+					this.$store.performance.noteOff(midi);
+				} else {
+					this.$store.performance.noteOn(midi);
+					const frequency=Convert.midiToHz(midi);
+					this.$store.audio.playTone(frequency);
+				}
+				break
+			case false:
+				this.$store.performance.noteOn(midi);
+				const frequency= Convert.midiToHz(midi);
+				this.$store.audio.playTone(frequency);
+				break
+		}
 		console.log('pressNote')
-  		this.$store.performance.noteOn(midi);
-  		const frequency= Convert.midiToHz(midi);
-  		this.$store.audio.playTone(frequency);
 	}
 
 	ReleaseNote(midi){
+		console.log('release note');
 		if (this.$store.config.sustain){ return } 
 		this.$store.performance.noteOff(midi);
 		
