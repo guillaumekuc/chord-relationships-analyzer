@@ -1,4 +1,5 @@
-import { defineStore } from 'pinia'
+import { defineStore } from 'pinia';
+import { useConfigStore } from './config.js';
 
 export const usePerformanceStore = defineStore('performance', {
   state: () => ({
@@ -10,6 +11,7 @@ export const usePerformanceStore = defineStore('performance', {
     passive: {
       notes: {},
       chord: null,
+      timeout: null,
     },
   }),
   actions: {
@@ -18,11 +20,8 @@ export const usePerformanceStore = defineStore('performance', {
     },
     noteOff(note) {
       if (this.active.chord) {
-        this.passive.chord = this.active.chord;
+        copyActiveToPassive(this);
 
-        
-        this.passive.notes = { ...this.active.notes };
-        this.active.chord = null; 
       }
 
       delete this.active.notes[note];
@@ -31,11 +30,10 @@ export const usePerformanceStore = defineStore('performance', {
         this.active.cr = null;
       }
     },
+
     reset() {
       if (this.active.chord) {
-        this.passive.chord=this.active.chord;
-        this.passive.notes=this.active.notes;
-        this.active.chord=null;
+        copyActiveToPassive(this);
       }
 
       this.active.notes = {}
@@ -44,4 +42,34 @@ export const usePerformanceStore = defineStore('performance', {
     }
   }
 })
+
+function copyActiveToPassive(performance){
+  console.log('copyActiveToPassive');
+  console.log(performance.active);
+  performance.passive.chord = performance.active.chord;
+
+  performance.passive.notes = { ...performance.active.notes };
+  performance.active.chord = null; 
+
+  setPassiveTimeout(performance);
+}
+
+function setPassiveTimeout(performance) {
+  const config=useConfigStore();
+
+  if (performance.passive.timeout) {
+        clearTimeout(performance.passive.timeout)
+        performance.passive.timeout = null
+  }
+  performance.passive.timeout = setTimeout(() => {
+    clearPassive(performance);
+  }, config.passiveTimeout)
+}
+
+function clearPassive(performance){ 
+  performance.passive.notes = {}
+  performance.passive.chord = null
+  performance.passive.timeout = null
+
+}
 
