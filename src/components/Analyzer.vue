@@ -28,35 +28,7 @@
 
   const store = useStore();
 
-  const triad = computed(() => Object.entries(store.performance.active.notes).length === 3);
-  const triadTypes=Triads.types;
 
-  watch(() => store.performance.active.notes, computeChord, { deep: true, immediate: true });
-
-  function computeChord(activeNotes) {
-    //identify triad, then check for chord relationship between passive and active
-    const chord=Triads.fromNotes(Object.keys(activeNotes));
-    store.performance.active.chord=chord;
-    if (store.performance.active.chord && store.performance.passive.chord){
-      console.log(store.performance.active.chord, store.performance.passive.chord);
-      const cr = computeCR(store.performance.active.chord, store.performance.passive.chord);
-      store.performance.active.cr=cr;
-    }
-  }
-
-  function computeCR(activeChord, passiveChord) {
-    Helpers.assert(
-      activeChord.quality != null
-      && activeChord.root != null
-      && passiveChord.quality != null
-      && passiveChord.root != null
-      , activeChord);
-    const interval=Intervals.romans[Common.modulo12(activeChord.root - passiveChord.root)];
-    const quickString=`${passiveChord.quality} ${interval} ${activeChord.quality}`;
-    return quickString; 
-
-
-  }
 
 </script>
 

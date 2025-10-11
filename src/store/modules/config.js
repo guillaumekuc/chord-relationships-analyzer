@@ -7,6 +7,7 @@ export const useConfigStore = defineStore('config', {
     octaveEnd: 6,
     keymap: 'x66',
     passiveTimeout: 2000,
+    autotrigger: false,
   }),
   actions: {
     
