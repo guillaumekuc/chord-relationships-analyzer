@@ -16,8 +16,8 @@
         :frequency="slot.lower.frequency"
         :is-upper="false"
         :is-black="slot.lower.color==='b' ? true : false"
-        :is-active="store.performance.active.notes[slot.lower.midi]"
-        :is-passive="store.performance.passive.notes[slot.lower.midi]"
+        :is-active="store.performance.active.notes.has(slot.lower.midi)"
+        :is-passive="store.performance.passive.notes.has(slot.lower.midi)"
         :parent="props.id"
         @press="onPress"
         @release="onRelease"
@@ -31,8 +31,8 @@
         :frequency="slot.upper.frequency"
         :is-upper="true"
         :is-black="slot.upper.color==='b' ? true : false"
-        :is-active="store.performance.active.notes[slot.upper.midi]"
-        :is-passive="store.performance.passive.notes[slot.upper.midi]"
+        :is-active="store.performance.active.notes.has(slot.upper.midi)"
+        :is-passive="store.performance.passive.notes.has(slot.upper.midi)"
         :parent="props.id"
         class="upper-overlay"
         @press="onPress"
@@ -115,7 +115,7 @@ const slots = computed(() => {
       const lMidi=octaveMidi+offset;
       const lower = { 
         note: `${pattern.value[i].l}${octave}`, 
-        midi: lMidi,
+        midi: Number(lMidi),
         frequency: Convert.midiToHz(lMidi),
         color: colorPattern.value[offset],
         keyboard: midiToKey.value[lMidi],
@@ -131,7 +131,7 @@ const slots = computed(() => {
         const uMidi=octaveMidi+offset;
         upper = { 
           note: `${pattern.value[i].u}${octave}`,
-          midi: uMidi,
+          midi: Number(uMidi),
           frequency: Convert.midiToHz(uMidi),
           color: colorPattern.value[offset],
           keyboard: midiToKey.value[uMidi],

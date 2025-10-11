@@ -8,37 +8,40 @@ import Helpers from "../../utils/Helpers.js";
 export const usePerformanceStore = defineStore('performance', {
   state: () => ({
     active: {
-      notes: {},
+      notes: new Set(),
       chord: null,
       cr: undefined,
+      order: [], // track press order for clearLast()
     },
     passive: {
-      notes: {},
+      notes: new Set(),
       chord: null,
       timeout: null,
     },
   }),
+
   actions: {
     noteOn(note) {
-      const config= useConfigStore();
-      this.active.notes[note] = true;
-
-      computeChord(this);
-      if (config.autotrigger){
-        this.validate();
-      }   
-
-    },
-    noteOff(note) {
-      const config= useConfigStore();
-
-      delete this.active.notes[note];
-      computeChord(this);
-
-      if (config.autotrigger){
-        this.validate();
+      const config = useConfigStore();
+      if (!this.active.notes.has(note)) {
+        this.active.notes.add(note);
+        this.active.order.push(note);
       }
 
+      computeChord(this);
+      if (config.autotrigger) this.validate();
+    },
+
+    noteOff(note) {
+      const config = useConfigStore();
+
+      if (this.active.notes.has(note)) {
+        this.active.notes.delete(note);
+        this.active.order = this.active.order.filter(n => n !== note);
+      }
+
+      computeChord(this);
+      if (config.autotrigger) this.validate();
     },
 
     validate() {
@@ -56,87 +59,80 @@ export const usePerformanceStore = defineStore('performance', {
     },
 
     clearLast() {
-      const config=useConfigStore();
-
-      const lastKey = Object.keys(this.active.notes).pop(); 
-      delete this.active.notes[lastKey]; 
-
-      computeChord(this);
-
-      if(config.autotrigger){
-        this.validate();
+      const config = useConfigStore();
+      const lastNote = this.active.order.pop();
+      if (lastNote !== undefined) {
+        this.active.notes.delete(lastNote);
+        computeChord(this);
+        if (config.autotrigger) this.validate();
       }
-    }
+    },
+  },
+});
+
+function computeChord(performance) {
+  const chord = Triads.fromNotes([...performance.active.notes]);
+  performance.active.chord = chord;
+
+  if (performance.active.chord && performance.passive.chord) {
+    const cr = computeCR(performance.active.chord, performance.passive.chord);
+    performance.active.cr = cr;
+  } else {
+    performance.active.cr = null;
   }
-})
+}
 
-  function computeChord(performance) {
-    //identify triad, then check for chord relationship between passive and active
-    const chord=Triads.fromNotes(Object.keys(performance.active.notes));
-    performance.active.chord=chord;
-    if (performance.active.chord && performance.passive.chord){
-      console.log(performance.active.chord, performance.passive.chord);
-      const cr = computeCR(performance.active.chord, performance.passive.chord);
-      performance.active.cr=cr;
-    } else {
-      performance.active.cr=null;
-    }
-  }
+function computeCR(activeChord, passiveChord) {
+  Helpers.assert(
+    activeChord.quality != null &&
+    activeChord.root != null &&
+    passiveChord.quality != null &&
+    passiveChord.root != null,
+    activeChord
+  );
 
-  function computeCR(activeChord, passiveChord) {
-    Helpers.assert(
-      activeChord.quality != null
-      && activeChord.root != null
-      && passiveChord.quality != null
-      && passiveChord.root != null
-      , activeChord);
-    const interval=Intervals.romans[Common.modulo12(activeChord.root - passiveChord.root)];
-    const quickString=`${passiveChord.quality} ${interval} ${activeChord.quality}`;
-    return quickString;
-  }
+  const interval = Intervals.romans[Common.modulo12(activeChord.root - passiveChord.root)];
+  return `${passiveChord.quality} ${interval} ${activeChord.quality}`;
+}
 
-
-
-function copyActiveToPassive(performance){
-  const config=useConfigStore();
-
+function copyActiveToPassive(performance) {
+  const config = useConfigStore();
 
   console.log('copyActiveToPassive');
   console.log(performance.active);
+
   performance.passive.chord = performance.active.chord;
+  performance.passive.notes = new Set(performance.active.notes);
+  performance.active.chord = null;
 
-  performance.passive.notes = { ...performance.active.notes };
-  performance.active.chord = null; 
-
-  if (config.fadeout){
+  if (config.fadeout) {
     setPassiveTimeout(performance, config.fadeoutDuration);
   }
 }
 
 function setPassiveTimeout(performance, duration) {
   if (performance.passive.timeout) {
-        clearTimeout(performance.passive.timeout)
-        performance.passive.timeout = null
+    clearTimeout(performance.passive.timeout);
+    performance.passive.timeout = null;
   }
+
   performance.passive.timeout = setTimeout(() => {
-    if (!performance.active.chord){
-     clearPassive(performance);     
-   } else {
-    setPassivetimeout(performance);
-   }
-
-  }, duration)
+    if (!performance.active.chord) {
+      clearPassive(performance);
+    } else {
+      setPassiveTimeout(performance, duration);
+    }
+  }, duration);
 }
 
-function clearActive(performance){
-  performance.active.notes = {}
-  performance.active.cr=null;
+function clearActive(performance) {
+  performance.active.notes.clear();
+  performance.active.order = [];
+  performance.active.cr = null;
 }
 
-function clearPassive(performance){ 
-  performance.passive.notes = {}
-  performance.passive.chord = null
-  performance.passive.timeout = null
-
+function clearPassive(performance) {
+  performance.passive.notes.clear();
+  performance.passive.chord = null;
+  performance.passive.timeout = null;
 }
-
