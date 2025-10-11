@@ -162,12 +162,11 @@ const slots = computed(() => {
 
 
 function onPress(midi) {
-      store.player.PressNote(midi);    
+  store.player.PressNote(midi);    
 }
 
 function onRelease(midi) {
-  store.player.ReleaseNote(midi);
-  emit('release', midi);
+  store.player.ReleaseNote(midi);    
 }
 
 </script>
