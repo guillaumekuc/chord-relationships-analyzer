@@ -5,8 +5,8 @@
   <Analyzer />
   <div class= "container">
     <Keyboard
-      start-octave=4
-      octaves=2
+      :start-octave="4"
+      :octaves="2"
       layout='x66'
       key='x66Keyboard'
       id='x66Keyboard'
