@@ -62,7 +62,12 @@ function setPassiveTimeout(performance) {
         performance.passive.timeout = null
   }
   performance.passive.timeout = setTimeout(() => {
-    clearPassive(performance);
+    if (!performance.active.chord){
+     clearPassive(performance);     
+   } else {
+    setPassivetimeout(performance);
+   }
+
   }, config.passiveTimeout)
 }
 
