@@ -18,14 +18,18 @@ export const usePerformanceStore = defineStore('performance', {
     },
     noteOff(note) {
       if (this.active.chord) {
-        this.passive.chord=this.active.chord;
-        this.passive.notes=this.active.notes;
-        this.active.chord=null;
+        this.passive.chord = this.active.chord;
+
+        
+        this.passive.notes = { ...this.active.notes };
+        this.active.chord = null; 
       }
 
       delete this.active.notes[note];
-      this.active.cr=null;
 
+      if (Object.keys(this.active.notes).length === 0) {
+        this.active.cr = null;
+      }
     },
     reset() {
       if (this.active.chord) {

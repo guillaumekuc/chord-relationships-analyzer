@@ -34,12 +34,13 @@
   watch(() => store.performance.active.notes, computeChord, { deep: true, immediate: true });
 
   function computeChord(activeNotes) {
+    //identify triad, then check for chord relationship between passive and active
     const chord=Triads.fromNotes(Object.keys(activeNotes));
     store.performance.active.chord=chord;
     if (store.performance.active.chord && store.performance.passive.chord){
       console.log(store.performance.active.chord, store.performance.passive.chord);
       const cr = computeCR(store.performance.active.chord, store.performance.passive.chord);
-      store.performance.active.cr=cr
+      store.performance.active.cr=cr;
     }
   }
 
