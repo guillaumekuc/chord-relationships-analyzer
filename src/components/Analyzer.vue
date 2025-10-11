@@ -18,17 +18,7 @@
 <script setup>
 
   import { useStore } from '../store';
-  import { computed } from 'vue';
-  import { watch } from 'vue';
-  import Triads from "../theory/Triads.js";
-  import Notes from "../theory/Notes.js";
-  import * as Common from "../theory/common.js";
-  import Helpers from "../utils/Helpers.js";
-  import Intervals from "../theory/Intervals.js";
-
   const store = useStore();
-
-
 
 </script>
 
