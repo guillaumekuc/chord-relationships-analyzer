@@ -11,4 +11,12 @@
   --pico-form-element-spacing-vertical: 0.125rem;
   --pico-form-element-spacing-horizontal: 0.5rem;
 
+  /* Keyboard layout dimensions */
+  --key-width: 40px;
+  --key-height: 160px;
+  --key-margin: 2px;
+  --upper-key-width: 26px;
+  --upper-key-height: 100px;
+  --upper-key-offset: 29px; /* (key-width + margins/2) - (upper-key-width / 2) = 42 - 13 = 29px */
+
 }
