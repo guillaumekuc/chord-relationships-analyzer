@@ -27,7 +27,7 @@ export const usePerformanceStore = defineStore('performance', {
       }
 
       computeChord(this);
-      if (config.autotrigger) { this.validate(config) };
+      if (config.autotrigger) { this.validate(config); };
     },
 
     noteOff(note, config = {}) {
@@ -37,7 +37,7 @@ export const usePerformanceStore = defineStore('performance', {
       }
 
       computeChord(this);
-      if (config.autotrigger) { this.validate(config) };
+      if (config.autotrigger) { this.validate(config); };
     },
 
     validate(config = {}) {
@@ -59,7 +59,7 @@ export const usePerformanceStore = defineStore('performance', {
       if (lastNote !== undefined) {
         this.active.notes.delete(lastNote);
         computeChord(this);
-        if (config.autotrigger) { this.validate(config) };
+        if (config.autotrigger) { this.validate(config); };
       }
     },
   },

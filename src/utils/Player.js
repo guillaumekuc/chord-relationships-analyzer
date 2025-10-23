@@ -1,36 +1,36 @@
 import Convert from '../utils/Convert.js';
 
 export default class Player {
-	constructor (stores) {
+	constructor(stores) {
 		this.stores = stores;
-		this.hp= 100;
-		this.position = {x:0, y:0};
+		this.hp = 100;
+		this.position = { x: 0, y: 0 };
 	}
 
-	PressNote(midi) {
-		switch(this.stores.config.sustain){
+	pressNote(midi) {
+		switch (this.stores.config.sustain) {
 			case true:
 				
-				if (this.stores.performance.active.notes.has(midi)){
+				if (this.stores.performance.active.notes.has(midi)) {
 					this.stores.performance.noteOff(midi, this.stores.config);
 				} else {
 					this.stores.performance.noteOn(midi, this.stores.config);
-					const frequency=Convert.midiToHz(midi);
+					const frequency = Convert.midiToHz(midi);
 					this.stores.audio.playTone(frequency);
 				}
-				break
+				break;
 			case false:
 				this.stores.performance.noteOn(midi, this.stores.config);
-				const frequency= Convert.midiToHz(midi);
+				const frequency = Convert.midiToHz(midi);
 				this.stores.audio.playTone(frequency);
-				break
+				break;
 		}
-		console.log('pressNote')
+		console.log('pressNote');
 	}
 
-	ReleaseNote(midi){
+	releaseNote(midi) {
 		console.log('release note');
-		if (this.stores.config.sustain){ return } 
+		if (this.stores.config.sustain) { return; } 
 		this.stores.performance.noteOff(midi, this.stores.config);
 		
 	}

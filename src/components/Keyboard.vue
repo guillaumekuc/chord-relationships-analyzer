@@ -1,5 +1,5 @@
 <template>
-  <section class="Keyboard-container">
+  <section class="keyboard-container">
     <KeyboardInspector
       :parent="props.id"
     />
@@ -92,11 +92,11 @@ const midiToKey = computed(() => keymap[stores.config.keymap])
 // 6-6 Keyboard pattern, isomorphic layout.
 const slots = computed(() => {
   const slots = [];
-  const octaveStart= stores.config.octaveStart;
-  const octaveEnd=stores.config.octaveEnd;
+  const octaveStart = stores.config.octaveStart;
+  const octaveEnd = stores.config.octaveEnd;
 
-  const octaves= octaveEnd - octaveStart;
-  if (!octaves>0){ console.error('invalid range'); return;}
+  const octaves = octaveEnd - octaveStart;
+  if (!octaves > 0) { console.error('invalid range'); return; }
 
   for (let o = 0; o < octaves; o++) {
     const octave = octaveStart + o;
@@ -106,7 +106,7 @@ const slots = computed(() => {
 
       const octaveMidi = 12 * (octaveStart + o + 1); //C0 => 0, C4 => 12 * (4 + 1) = 60
 
-      const lMidi=octaveMidi+offset;
+      const lMidi = octaveMidi + offset;
       const lower = { 
         note: `${pattern.value[i].l}${octave}`, 
         midi: Number(lMidi),
@@ -118,16 +118,16 @@ const slots = computed(() => {
       offset++;
 
 
-      let upper=null;
-      if (pattern.value[i].u){
-        const uMidi=octaveMidi+offset;
+      let upper = null;
+      if (pattern.value[i].u) {
+        const uMidi = octaveMidi + offset;
         upper = { 
           note: `${pattern.value[i].u}${octave}`,
           midi: Number(uMidi),
           color: colorPattern.value[offset],
           keyboard: midiToKey.value[uMidi],
         }
-        offset++
+        offset++;
       }
 
       slots.push({ lower, upper });
@@ -136,8 +136,8 @@ const slots = computed(() => {
 
   //final white key to close the pattern
 
-  const octaveEndMidi= 12 * (octaveEnd +1);
-  const last= `${pattern.value[0].l}${octaveEnd}`;
+  const octaveEndMidi = 12 * (octaveEnd + 1);
+  const last = `${pattern.value[0].l}${octaveEnd}`;
 
   slots.push({
     lower: {
@@ -155,7 +155,7 @@ const slots = computed(() => {
 
 <style scoped>
 
-.Keyboard-container {
+.keyboard-container {
   margin-left:auto;
   margin-right:auto;
   display: flex;

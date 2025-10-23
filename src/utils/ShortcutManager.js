@@ -6,28 +6,28 @@ export default class ShortcutManager {
 		this.stores = stores;
 	}
 
-	init (){
+	init() {
 		window.addEventListener("keydown", this.handleKeyDown);
   		window.addEventListener("keyup", this.handleKeyUp);
 	}
 
-	destroy(){
+	destroy() {
 	  	window.removeEventListener("keydown", this.handleKeyDown);
 		window.removeEventListener("keyup", this.handleKeyUp);
 	}
 
-	handleKeyDown = (e) =>  {
-	  if (e.repeat) { return };
+	handleKeyDown = (e) => {
+	  if (e.repeat) { return; };
 
-	  if (e.key==="Enter") {
+	  if (e.key === "Enter") {
 	  	this.stores.performance.validate(this.stores.config);
 	  }
 
-	  if (e.key==='Escape' || e.key==='Esc' ){
+	  if (e.key === 'Escape' || e.key === 'Esc') {
 	    console.log('escape');
 	    this.stores.performance.reset();
 	  }
-	  if (e.key==='Backspace' || e.key==="Delete"){
+	  if (e.key === 'Backspace' || e.key === "Delete") {
 	    console.log('backspace');
 	    //clearLastActive();
 	    this.stores.performance.clearLast(this.stores.config);
@@ -35,7 +35,7 @@ export default class ShortcutManager {
 
 	  const map = keymap[this.stores.config.keymap];
 	  const midi = Convert.keyToMidi(e.key.toLowerCase(), map);
-	  if (!midi){return}
+	  if (!midi) { return; }
 
 	  console.log(e);
 
@@ -45,10 +45,10 @@ export default class ShortcutManager {
 	handleKeyUp = (e) => {
 	  const map = keymap[this.stores.config.keymap];
 	  const midi = Convert.keyToMidi(e.key.toLowerCase(), map);
-	  if (!midi){return}
-	  if (this.stores.config.sustain){ 
+	  if (!midi) { return; }
+	  if (this.stores.config.sustain) { 
 	  	console.log('sustain active');
-	  	return 
+	  	return; 
 	  } 
 	  this.stores.player.releaseNote(midi);
 	}

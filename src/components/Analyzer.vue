@@ -3,22 +3,33 @@
 
   <article class="analyzer">
     <div class="cr-container">
-      <span :class="stores.performance.passive.chord?.name ? 'passive' : ''">{{stores.performance.passive.chord?.name ?? ""}}</span>
-      <span :class="stores.performance.passive.chord?.name && stores.performance.active.chord?.name ? 'separator' : ''"></span>
-      <span class="cr">{{stores.performance.active?.cr ?? ""}}</span>
-      <span :class="stores.performance.passive.chord?.name && stores.performance.active.chord?.name ? 'separator' : ''"></span>
-      <span :class="stores.performance.active.chord?.name ? 'active' : ''">{{stores.performance.active.chord?.name ?? ""}}</span>
+      <span :class="hasPassiveChord ? 'passive' : ''">{{ passiveChordName }}</span>
+      <span :class="showSeparator ? 'separator' : ''"></span>
+      <span class="cr">{{ activeCR }}</span>
+      <span :class="showSeparator ? 'separator' : ''"></span>
+      <span :class="hasActiveChord ? 'active' : ''">{{ activeChordName }}</span>
       
     </div>
   </article>
 </template>
 
 <script setup>
+// Vue imports
+import { computed } from 'vue'
+
 // Internal imports
 import { useStores } from '../store'
 
 // Store usage
 const stores = useStores()
+
+// Computed properties for derived states
+const passiveChordName = computed(() => stores.performance.passive.chord?.name ?? "")
+const activeChordName = computed(() => stores.performance.active.chord?.name ?? "")
+const activeCR = computed(() => stores.performance.active?.cr ?? "")
+const hasPassiveChord = computed(() => !!stores.performance.passive.chord?.name)
+const hasActiveChord = computed(() => !!stores.performance.active.chord?.name)
+const showSeparator = computed(() => hasPassiveChord.value && hasActiveChord.value)
 </script>
 
 <style scoped>

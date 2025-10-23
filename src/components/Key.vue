@@ -87,7 +87,7 @@ let activePointerId = null
     if (e.pointerId !== activePointerId) return
 
     // Treat cancel as a release to avoid stuck notes
-    if (pressed.value) store.player.ReleaseNote(props.midi)
+    if (pressed.value) stores.player.releaseNote(props.midi)
 
     pressed.value = false
     activePointerId = null

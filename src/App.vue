@@ -1,5 +1,5 @@
 <template>
-  <article class="mainContainer" data-theme="light">
+  <article class="main-container" data-theme="light">
     <header>
       <MIDIConsole />
       <ConfigInspector/>
@@ -9,18 +9,17 @@
       <Keyboard
         :start-octave="4"
         :octaves="2"
-        layout='x66'
-        key='x66Keyboard'
-        id='x66Keyboard'
-        colors='x75'
+        layout="x66"
+        key="x66Keyboard"
+        id="x66Keyboard"
+        colors="x75"
       />
       <Keyboard 
         :start-octave="4"
         :octaves="2"
-        :layout="'x75'"
-        :key="'x75Keyboard'"
-        :id="'x75Keyboard'"
-
+        layout="x75"
+        key="x75Keyboard"
+        id="x75Keyboard"
       />
 
   </article>
@@ -46,7 +45,7 @@ shortcutManager.init()
 </script>
 
 <style scoped>
-  .mainContainer {
+  .main-container {
     display: flex;
     flex-direction: column;
     height: 100vh;
