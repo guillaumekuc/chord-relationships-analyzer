@@ -2,8 +2,6 @@
 
 
   <article class="analyzer">
-  
-    <h1></h1>
     <div class="cr-container">
       <span :class="store.performance.passive.chord?.name ? 'passive' : ''">{{store.performance.passive.chord?.name ?? ""}}</span>
       <span :class="store.performance.passive.chord?.name && store.performance.active.chord?.name ? 'separator' : ''"></span>

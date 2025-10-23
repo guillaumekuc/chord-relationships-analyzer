@@ -43,7 +43,6 @@ const props = defineProps({
   note: { type: String, required: true },
   midi: { type: Number, required: true },
   keyboard: { type: String },
-  frequency: { type: Number, required: true },
   isUpper: { type: Boolean, default: false, required: true },
   isBlack: { type: Boolean, default: false, required: true },
   isActive: { type: Boolean, default: false },

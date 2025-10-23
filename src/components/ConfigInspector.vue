@@ -33,8 +33,6 @@ const store = useStore()
 function cycleKeymaps() {
 	  const keymap=store.config.keymap;
 	  const allKeymaps=Object.keys(keymaps);
-	  console.log(keymap);
-	  console.log(allKeymaps);
 	  if (allKeymaps.includes(keymap)){
 	    const index=allKeymaps.indexOf(keymap);
 	    const nextIndex = (index + 1) % allKeymaps.length;
@@ -42,7 +40,6 @@ function cycleKeymaps() {
 	  } else {
 	    store.config.keymap = allKeymaps[0];
 	  }
-	  
 	}
 
 </script>

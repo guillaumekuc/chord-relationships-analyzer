@@ -31,15 +31,10 @@ const store = useStore()
 // Reactive data
 const isWebMidi = typeof navigator !== 'undefined' && 'requestMIDIAccess' in navigator
 const isConnected = ref(false)
-const log = ref('')
 const access = ref(null)
 const input = ref(null)
 const inputs = ref([])        // [{ id, name, manufacturer }]
 const selectedId = ref('')
-
-  function write(...parts) {
-    log.value += parts.join(' ') + '\n';
-  }   
 
   async function connect() {
     if (!isWebMidi || isConnected.value) return;
@@ -47,12 +42,11 @@ const selectedId = ref('')
     try {
       access.value = await navigator.requestMIDIAccess({ sysex: false });
       isConnected.value = true;
-      write('MIDI ready');
 
       refreshInputs();
       access.value.onstatechange = refreshInputs; // hot-plug updates
     } catch (e) {
-      write('Failed to get MIDI access:', String(e));
+      console.error('Failed to get MIDI access:', String(e));
     }
   }
 
@@ -81,9 +75,6 @@ const selectedId = ref('')
 
     if (input.value) {
       input.value.onmidimessage = onMessage;
-      write(`Listening on: ${input.value.name || 'Unknown device'}`);
-    } else {
-      write('No input selected.');
     }
   }
 
@@ -93,14 +84,16 @@ const selectedId = ref('')
     const channel = (status & 0x0f) + 1;
 
     if (type === 0x90) {
-      if (data2 === 0) write(`Note Off  ch=${channel} note=${data1}`);
-      else write(`Note On   ch=${channel} note=${data1} vel=${data2}`);
-      console.log(store);
-      store.player.PressNote(data1);
+      if (data2 === 0) {
+        // Note Off
+        store.player.ReleaseNote(data1);
+      } else {
+        // Note On
+        store.player.PressNote(data1);
+      }
     } else if (type === 0x80) {
-      write(`Note Off  ch=${channel} note=${data1} vel=${data2}`);
-    } else {
-      write(`MIDI ${e.data.join(',')}`);
+      // Note Off
+      store.player.ReleaseNote(data1);
     }
   }
 

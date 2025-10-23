@@ -154,7 +154,6 @@ const slots = computed(() => {
     }, 
     upper: null});
 
-  console.log(slots);
   return slots
 })
 

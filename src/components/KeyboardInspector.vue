@@ -55,8 +55,6 @@ function cycleColors() {
     } else {
       store.instruments[props.parent].colors = allColors[0];
     }
-    console.log('cycle Colors');
-    console.log(allColors);
   }
 
   function cycleLayouts() {
