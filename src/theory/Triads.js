@@ -1,4 +1,4 @@
-import * as Common from './common.js';
+import Common from './common.js';
 import Notes from './Notes.js';
 import Helpers from '../utils/Helpers.js';
 

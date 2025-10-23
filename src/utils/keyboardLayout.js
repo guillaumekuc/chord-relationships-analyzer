@@ -1,6 +1,6 @@
-import { MIDI_CONSTANTS } from '../constants/midi.js'
+import MIDI_CONSTANTS from '../constants/midi.js'
 
-export function generateKeyboardSlots(octaveStart, octaveEnd, pattern, colorPattern, midiToKey) {
+function generateKeyboardSlots(octaveStart, octaveEnd, pattern, colorPattern, midiToKey) {
   const slots = []
   const octaveCount = octaveEnd - octaveStart
   
@@ -55,3 +55,5 @@ export function generateKeyboardSlots(octaveStart, octaveEnd, pattern, colorPatt
 
   return slots
 }
+
+export default generateKeyboardSlots;

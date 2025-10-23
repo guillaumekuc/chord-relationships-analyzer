@@ -1,17 +1,17 @@
 <template>
     <div class="midi-console">
-      <button @click="connect" :disabled="isConnected || !isWebMidi">
-        {{ isWebMidi ? (isConnected ? 'MIDI Connected' : 'Enable MIDI') : 'Web MIDI not supported' }}
+      <button @click="handleConnect" :disabled="midiStore.isConnected || !midiStore.isWebMidiSupported">
+        {{ midiStore.isWebMidiSupported ? (midiStore.isConnected ? 'MIDI Connected' : 'Enable MIDI') : 'Web MIDI not supported' }}
       </button>
 
       <select
-        v-model="selectedId"
-        @change="bindSelected"
-        :disabled="!isConnected || inputs.length === 0"
+        v-model="midiStore.selectedId"
+        @change="handleDeviceSelect"
+        :disabled="!midiStore.isConnected || midiStore.inputs.length === 0"
         aria-label="MIDI input device"
       >
-        <option v-if="inputs.length === 0" disabled value="">No MIDI inputs</option>
-        <option v-for="i in inputs" :key="i.id" :value="i.id">
+        <option v-if="midiStore.inputs.length === 0" disabled value="">No MIDI inputs</option>
+        <option v-for="i in midiStore.inputs" :key="i.id" :value="i.id">
           {{ i.name }} ({{ i.manufacturer || 'Unknown' }})
         </option>
       </select>
@@ -20,99 +20,31 @@
 
 <script setup>
 // Vue imports
-import { ref, onBeforeUnmount } from 'vue'
+import { onBeforeUnmount } from 'vue'
 
 // Store imports
 import { useStores } from '../store/index.js'
 
-// Utils imports
-import debugLog from '../utils/DebugLogger.js'
-
 // Store usage
 const stores = useStores()
+const midiStore = stores.midi
 
-// Reactive data
-const isWebMidi = typeof navigator !== 'undefined' && 'requestMIDIAccess' in navigator
-const isConnected = ref(false)
-const access = ref(null)
-const input = ref(null)
-const inputs = ref([])        // [{ id, name, manufacturer }]
-const selectedId = ref('')
-
-  async function connect() {
-    if (!isWebMidi || isConnected.value) return;
-
-    try {
-      access.value = await navigator.requestMIDIAccess({ sysex: false });
-      isConnected.value = true;
-      debugLog('MIDI connected');
-
-      refreshInputs();
-      access.value.onstatechange = refreshInputs; // hot-plug updates
-    } catch (e) {
-      debugLog('Failed to get MIDI access', String(e));
-    }
+async function handleConnect() {
+  const result = await stores.actions.connectMIDI.execute();
+  if (result.success) {
+    // Refresh devices after successful connection
+    stores.actions.refreshMIDIDevices.execute();
   }
+}
 
-  function refreshInputs() {
-    if (!access.value) return;
+function handleDeviceSelect() {
+  stores.actions.selectMIDIDevice.execute({ deviceId: midiStore.selectedId });
+}
 
-    inputs.value = Array.from(access.value.inputs.values()).map(i => ({
-      id: i.id,
-      name: i.name,
-      manufacturer: i.manufacturer
-    }));
-
-
-    if (!inputs.value.find(i => i.id === selectedId.value)) {
-      selectedId.value = inputs.value[0]?.id || '';
-    }
-
-    bindSelected();
-  }
-
-  function bindSelected() {
-    if (!access.value) return;
-
-    if (input.value) input.value.onmidimessage = null;
-
-    input.value = selectedId.value ? access.value.inputs.get(selectedId.value) : null;
-
-    if (input.value) {
-      debugLog(`MIDI device: ${input.value.name}`);
-      input.value.onmidimessage = onMessage;
-    } else {
-    }
-  }
-
-  function onMessage(e) {
-    const [status, data1 = 0, data2 = 0] = e.data;
-    const type = status & 0xf0;
-    const channel = (status & 0x0f) + 1;
-
-
-    if (type === 0x90) {
-      if (data2 === 0) {
-        // Note Off
-        debugLog(`MIDI OFF: ${data1}`);
-        stores.actions.releaseNote.execute(data1);
-      } else {
-        // Note On
-        debugLog(`MIDI ON: ${data1}`);
-        stores.actions.pressNote.execute(data1);
-      }
-    } else if (type === 0x80) {
-      // Note Off
-      debugLog(`MIDI OFF: ${data1}`);
-      stores.actions.releaseNote.execute(data1);
-    } else {
-    }
-  }
-
-  onBeforeUnmount(() => {
-    if (input.value) input.value.onmidimessage = null;
-    if (access.value) access.value.onstatechange = null;
-  });
+onBeforeUnmount(() => {
+  if (midiStore.input) midiStore.input.onmidimessage = null;
+  if (midiStore.access) midiStore.access.onstatechange = null;
+});
 </script>
 
 <style scoped>
@@ -126,7 +58,6 @@ const selectedId = ref('')
   select {
     margin-bottom: 0px;
   }
-
 
   .midi-console { 
     display: flex;

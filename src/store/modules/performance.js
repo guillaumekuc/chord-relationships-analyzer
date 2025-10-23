@@ -1,11 +1,11 @@
 import { defineStore } from 'pinia';
 import Triads from "../../theory/Triads.js";
 import Intervals from "../../theory/Intervals.js";
-import * as Common from "../../theory/common.js";
+import Common from "../../theory/common.js";
 import Helpers from "../../utils/Helpers.js";
 import debugLog from "../../utils/DebugLogger.js";
 
-export const usePerformanceStore = defineStore('performance', {
+const usePerformanceStore = defineStore('performance', {
   state: () => ({
     active: {
       notes: new Set(),
@@ -142,3 +142,5 @@ function clearPassive(performance) {
   performance.passive.chord = null;
   performance.passive.timeout = null;
 }
+
+export default usePerformanceStore;

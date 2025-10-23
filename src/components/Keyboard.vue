@@ -42,15 +42,15 @@
 
 <script setup>
   import { computed } from 'vue'
-  import { usePerformanceStore } from '../store/modules/performance.js'
-  import { useConfigStore } from '../store/modules/config.js'
-  import { useInstrumentsStore } from '../store/modules/instruments.js'
+  import usePerformanceStore from '../store/modules/performance.js'
+  import useConfigStore from '../store/modules/config.js'
+  import useInstrumentsStore from '../store/modules/instruments.js'
   import Key from './Key.vue'
   import KeyboardInspector from './KeyboardInspector.vue'
   import keymap from '../config/keymap.js'
   import keyboardRowPatterns from '../config/keyboardRowPatterns.js'
   import keyboardColorPatterns from '../config/keyboardColorPatterns.js'
-  import { generateKeyboardSlots } from '../utils/keyboardLayout.js'
+  import generateKeyboardSlots from '../utils/keyboardLayout.js'
 
   const props = defineProps({
     startOctave: { type: Number, default: 3 },

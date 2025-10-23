@@ -1,7 +1,7 @@
 import debugLog from '../utils/DebugLogger.js';
 import keymaps from '../config/keymap.js';
 
-export class CycleKeymap {
+class CycleKeymap {
   constructor(stores) {
     this.configStore = stores.config;
   }
@@ -17,3 +17,5 @@ export class CycleKeymap {
     // Helper functions
   }
 }
+
+export default CycleKeymap;

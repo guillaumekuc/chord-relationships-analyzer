@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const useConfigStore = defineStore('config', {
+const useConfigStore = defineStore('config', {
   state: () => ({
     sustain: false,
     octaveStart: 4,
@@ -35,4 +35,6 @@ export const useConfigStore = defineStore('config', {
     }
   }
 })
+
+export default useConfigStore;
 

@@ -1,9 +1,9 @@
 import debugLog from '../utils/DebugLogger.js';
 import Triads from '../theory/Triads.js';
 import Intervals from '../theory/Intervals.js';
-import * as Common from '../theory/common.js';
+import Common from '../theory/common.js';
 
-export class RemoveLastNote {
+class RemoveLastNote {
   constructor(stores) {
     this.performanceStore = stores.performance;
     this.configStore = stores.config;
@@ -98,3 +98,5 @@ export class RemoveLastNote {
     }
   }
 }
+
+export default RemoveLastNote;

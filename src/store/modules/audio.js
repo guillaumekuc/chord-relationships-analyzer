@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const useAudioStore = defineStore('audio', {
+const useAudioStore = defineStore('audio', {
   state: () => ({
     audio: null,
   }),
@@ -17,3 +17,5 @@ export const useAudioStore = defineStore('audio', {
     }
   }
 })
+
+export default useAudioStore;

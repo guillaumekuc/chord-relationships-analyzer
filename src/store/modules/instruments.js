@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const useInstrumentsStore = defineStore('instruments', {
+const useInstrumentsStore = defineStore('instruments', {
   state: () => ({
     instruments: {},
   }),
@@ -21,3 +21,5 @@ export const useInstrumentsStore = defineStore('instruments', {
     }
   }
 })
+
+export default useInstrumentsStore;

@@ -1,4 +1,4 @@
-import * as Common from './common.js';
+import Common from './common.js';
 
 export default class Notes {
   static letters = [

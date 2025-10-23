@@ -11,7 +11,7 @@
 </template>
 
 <script setup>
-import { usePerformanceStore } from '../store/modules/performance.js'
+import usePerformanceStore from '../store/modules/performance.js'
 
 const performanceStore = usePerformanceStore()
 </script>
