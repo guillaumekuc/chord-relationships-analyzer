@@ -1,6 +1,6 @@
 import debugLog from '../utils/DebugLogger.js';
 
-class ResetPerformance {
+export default class ResetPerformance {
   constructor(stores) {
     this.performanceStore = stores.performance;
   }
@@ -33,4 +33,3 @@ class ResetPerformance {
   }
 }
 
-export default ResetPerformance;

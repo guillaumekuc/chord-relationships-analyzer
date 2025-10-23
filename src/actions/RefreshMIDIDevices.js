@@ -1,6 +1,6 @@
 import debugLog from '../utils/DebugLogger.js';
 
-class RefreshMIDIDevices {
+export default class RefreshMIDIDevices {
   constructor(stores) {
     this.midiStore = stores.midi;
   }
@@ -38,4 +38,3 @@ class RefreshMIDIDevices {
   }
 }
 
-export default RefreshMIDIDevices;

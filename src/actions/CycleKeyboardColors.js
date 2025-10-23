@@ -1,7 +1,7 @@
 import debugLog from '../utils/DebugLogger.js';
 import keyboardColorPatterns from '../config/keyboardColorPatterns.js';
 
-class CycleKeyboardColors {
+export default class CycleKeyboardColors {
   constructor(stores) {
     this.instrumentsStore = stores.instruments;
   }
@@ -35,4 +35,3 @@ class CycleKeyboardColors {
   }
 }
 
-export default CycleKeyboardColors;

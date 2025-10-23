@@ -1,6 +1,6 @@
 import debugLog from '../utils/DebugLogger.js';
 
-class ToggleKeyboardLabels {
+export default class ToggleKeyboardLabels {
   constructor(stores) {
     this.instrumentsStore = stores.instruments;
   }
@@ -28,4 +28,3 @@ class ToggleKeyboardLabels {
   }
 }
 
-export default ToggleKeyboardLabels;

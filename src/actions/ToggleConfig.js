@@ -1,6 +1,6 @@
 import debugLog from '../utils/DebugLogger.js';
 
-class ToggleConfig {
+export default class ToggleConfig {
   constructor(stores) {
     this.configStore = stores.config;
   }
@@ -12,4 +12,3 @@ class ToggleConfig {
   }
 }
 
-export default ToggleConfig;

@@ -1,7 +1,7 @@
 import debugLog from '../utils/DebugLogger.js';
 import keyboardRowPatterns from '../config/keyboardRowPatterns.js';
 
-class CycleKeyboardLayout {
+export default class CycleKeyboardLayout {
   constructor(stores) {
     this.instrumentsStore = stores.instruments;
   }
@@ -35,4 +35,4 @@ class CycleKeyboardLayout {
   }
 }
 
-export default CycleKeyboardLayout;
+

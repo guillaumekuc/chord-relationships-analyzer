@@ -1,6 +1,6 @@
 import debugLog from '../utils/DebugLogger.js';
 
-class ConnectMIDI {
+export default class ConnectMIDI {
   constructor(stores) {
     this.midiStore = stores.midi;
   }
@@ -35,4 +35,3 @@ class ConnectMIDI {
   }
 }
 
-export default ConnectMIDI;

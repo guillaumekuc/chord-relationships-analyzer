@@ -1,6 +1,6 @@
 import debugLog from '../utils/DebugLogger.js';
 
-class ToggleNoteLabels {
+export default class ToggleNoteLabels {
   constructor(stores) {
     this.instrumentsStore = stores.instruments;
   }
@@ -28,4 +28,3 @@ class ToggleNoteLabels {
   }
 }
 
-export default ToggleNoteLabels;

@@ -1,7 +1,7 @@
 import Convert from '../utils/Convert.js';
 import debugLog from '../utils/DebugLogger.js';
 
-class PressNote {
+export default class PressNote {
   constructor(stores) {
     this.performanceStore = stores.performance;
     this.audioStore = stores.audio;
@@ -36,5 +36,3 @@ class PressNote {
     }
   }
 }
-
-export default PressNote;

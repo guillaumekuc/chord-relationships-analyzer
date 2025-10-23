@@ -1,6 +1,6 @@
 import debugLog from '../utils/DebugLogger.js';
 
-class ValidateChord {
+export default class ValidateChord {
   constructor(stores) {
     this.performanceStore = stores.performance;
     this.configStore = stores.config;
@@ -60,4 +60,3 @@ class ValidateChord {
   }
 }
 
-export default ValidateChord;

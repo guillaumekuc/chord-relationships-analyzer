@@ -1,6 +1,6 @@
 import debugLog from '../utils/DebugLogger.js';
 
-class SelectMIDIDevice {
+export default class SelectMIDIDevice {
   constructor(stores) {
     this.midiStore = stores.midi;
     this.performanceStore = stores.performance;
@@ -56,4 +56,3 @@ class SelectMIDIDevice {
   }
 }
 
-export default SelectMIDIDevice;

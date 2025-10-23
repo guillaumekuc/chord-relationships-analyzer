@@ -1,6 +1,6 @@
 import debugLog from '../utils/DebugLogger.js';
 
-class ReleaseNote {
+export default class ReleaseNote {
   constructor(stores) {
     this.performanceStore = stores.performance;
     this.configStore = stores.config;
@@ -23,4 +23,3 @@ class ReleaseNote {
   }
 }
 
-export default ReleaseNote;
