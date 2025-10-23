@@ -3,6 +3,8 @@ import Convert from '../utils/Convert.js';
 export default class Player {
 	constructor (store) {
 		this.$store=store;
+		this.hp= 100;
+		this.position = {x:0, y:0};
 	}
 
 	PressNote(midi) {

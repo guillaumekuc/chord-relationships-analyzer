@@ -51,9 +51,6 @@ const props = defineProps({
   parent: { type: String, required: true }
 })
 
-// Emits definition
-const emit = defineEmits(['press', 'release'])
-
 // Store usage
 const store = useStore()
 
@@ -72,7 +69,7 @@ let activePointerId = null
     // pointer leaves the element.
     e.currentTarget.setPointerCapture(e.pointerId);
 
-    emit('press', props.midi)
+    store.player.PressNote(props.midi)
   }
 
   function onPointerUp(e) {
@@ -84,14 +81,14 @@ let activePointerId = null
     // Release capture after we’re done
     try { e.currentTarget.releasePointerCapture(e.pointerId) } catch {}
 
-    emit('release', props.midi)
+    store.player.ReleaseNote(props.midi)
   }
 
   function onPointerCancel(e) {
     if (e.pointerId !== activePointerId) return
 
     // Treat cancel as a release to avoid stuck notes
-    if (pressed.value) emit('release', props.midi)
+    if (pressed.value) store.player.ReleaseNote(props.midi)
 
     pressed.value = false
     activePointerId = null

@@ -20,8 +20,6 @@
           :is-active="store.performance.active.notes.has(slot.lower.midi)"
           :is-passive="store.performance.passive.notes.has(slot.lower.midi)"
           :parent="props.id"
-          @press="onPress"
-          @release="onRelease"
         />
 
         <Key
@@ -36,8 +34,6 @@
           :is-passive="store.performance.passive.notes.has(slot.upper.midi)"
           :parent="props.id"
           class="upper-overlay"
-          @press="onPress"
-          @release="onRelease"
         />
       </div>
     </div>
@@ -74,8 +70,6 @@ const props = defineProps({
   displayKeyboardLabels: {type: Boolean, default: false},
 })
 
-// Emits definition
-const emit = defineEmits(['press', 'release'])
 
 // Store usage
 const store = useStore()
@@ -165,13 +159,6 @@ const slots = computed(() => {
 })
 
 
-function onPress(midi) {
-  store.player.PressNote(midi);    
-}
-
-function onRelease(midi) {
-  store.player.ReleaseNote(midi);    
-}
 
 </script>
 
