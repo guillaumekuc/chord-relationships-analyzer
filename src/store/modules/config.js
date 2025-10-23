@@ -2,13 +2,13 @@ import { defineStore } from 'pinia'
 
 export const useConfigStore = defineStore('config', {
   state: () => ({
-    sustain: true,
+    sustain: false,
     octaveStart: 4,
     octaveEnd: 6,
     keymap: 'x66',
-    fadeout: true,
+    fadeout: false,
     fadeoutDuration: 2000,
-    autotrigger: true,
+    autotrigger: false,
   }),
   
   actions: {

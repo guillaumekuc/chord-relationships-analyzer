@@ -21,7 +21,7 @@ const performanceStore = usePerformanceStore()
     height: 1.66rem;
     width: 1.66rem;
     border-radius: 5px;    
-    padding: 5px;
+    padding: 25px;
     color: white;
   }
 
