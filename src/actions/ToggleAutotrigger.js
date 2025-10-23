@@ -14,6 +14,5 @@ export class ToggleAutotrigger {
     that.configStore.toggle('autotrigger');
     
     // Helper functions
-    // (No helper functions needed for this simple toggle)
   }
 }

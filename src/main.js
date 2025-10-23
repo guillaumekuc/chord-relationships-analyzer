@@ -38,10 +38,4 @@ stores.player.initializePlayer(player);
 // optional: expose globally for console
 window.API = {
   stores,
-  performance: stores.performance,
-  config: stores.config,
-  audio: stores.audio,
-  player: stores.player,
-  instruments: stores.instruments,
-  debugLog
 };

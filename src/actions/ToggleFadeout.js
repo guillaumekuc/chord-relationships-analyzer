@@ -14,6 +14,5 @@ export class ToggleFadeout {
     that.configStore.toggle('fadeout');
     
     // Helper functions
-    // (No helper functions needed for this simple toggle)
   }
 }

@@ -14,6 +14,6 @@ export class ToggleSustain {
     that.configStore.toggle('sustain');
     
     // Helper functions
-    // (No helper functions needed for this simple toggle)
+
   }
 }

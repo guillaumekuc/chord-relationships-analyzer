@@ -15,6 +15,5 @@ export class CycleKeymap {
     that.configStore.cycle('keymap', keymaps);
     
     // Helper functions
-    // (No helper functions needed - logic moved to config store)
   }
 }
