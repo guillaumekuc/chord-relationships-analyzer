@@ -22,14 +22,14 @@
 // Vue imports
 import { ref, onBeforeUnmount } from 'vue'
 
-// Store imports - use direct imports for better performance
-import { usePerformanceStore } from '../store/modules/performance.js'
+// Store imports
+import { useStores } from '../store/index.js'
 
 // Utils imports
 import debugLog from '../utils/DebugLogger.js'
 
-// Store usage - direct imports for better performance
-const performanceStore = usePerformanceStore()
+// Store usage
+const stores = useStores()
 
 // Reactive data
 const isWebMidi = typeof navigator !== 'undefined' && 'requestMIDIAccess' in navigator
@@ -95,16 +95,16 @@ const selectedId = ref('')
       if (data2 === 0) {
         // Note Off
         debugLog(`MIDI OFF: ${data1}`);
-        performanceStore.noteOff(data1);
+        stores.actions.releaseNote.execute(data1);
       } else {
         // Note On
         debugLog(`MIDI ON: ${data1}`);
-        performanceStore.noteOn(data1);
+        stores.actions.pressNote.execute(data1);
       }
     } else if (type === 0x80) {
       // Note Off
       debugLog(`MIDI OFF: ${data1}`);
-      performanceStore.noteOff(data1);
+      stores.actions.releaseNote.execute(data1);
     } else {
     }
   }
@@ -135,9 +135,6 @@ const selectedId = ref('')
     margin-bottom: var(--pico-spacing);
   }
 
-
-
   button:disabled { opacity: .6; cursor: not-allowed; }
-
 
 </style>

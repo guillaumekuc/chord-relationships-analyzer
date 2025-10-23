@@ -10,7 +10,7 @@ export const usePerformanceStore = defineStore('performance', {
     active: {
       notes: new Set(),
       chord: null,
-      cr: undefined,
+      chordRelationship: undefined,
       order: [], // track press order for clearLast()
     },
     passive: {
@@ -21,7 +21,7 @@ export const usePerformanceStore = defineStore('performance', {
   }),
 
   actions: {
-    noteOn(note, config = {}) {
+    addNote(note, config = {}) {
       if (!this.active.notes.has(note)) {
         this.active.notes.add(note);
         this.active.order.push(note);
@@ -32,7 +32,7 @@ export const usePerformanceStore = defineStore('performance', {
       if (config.autotrigger) { this.validate(config); };
     },
 
-    noteOff(note, config = {}) {
+    removeNote(note, config = {}) {
       if (this.active.notes.has(note)) {
         this.active.notes.delete(note);
         this.active.order = this.active.order.filter(n => n !== note);
@@ -43,7 +43,7 @@ export const usePerformanceStore = defineStore('performance', {
       if (config.autotrigger) { this.validate(config); };
     },
 
-    validate(config = {}) {
+    validateCurrentChord(config = {}) {
       if (this.active.chord) {
         debugLog('Valid chord detected:', this.active.chord);
         copyActiveToPassive(this, config);
@@ -59,7 +59,7 @@ export const usePerformanceStore = defineStore('performance', {
       clearPassive(this);
     },
 
-    clearLast(config = {}) {
+    removeLastNote(config = {}) {
       const lastNote = this.active.order.pop();
       if (lastNote !== undefined) {
         this.active.notes.delete(lastNote);
@@ -83,11 +83,11 @@ function computeChord(performance) {
   }
 
   if (performance.active.chord && performance.passive.chord) {
-    const cr = computeCR(performance.active.chord, performance.passive.chord);
-    performance.active.cr = cr;
-    debugLog('Chord relationship:', cr);
+    const chordRelationship = computeCR(performance.active.chord, performance.passive.chord);
+    performance.active.chordRelationship = chordRelationship;
+    debugLog('Chord relationship:', chordRelationship);
   } else {
-    performance.active.cr = null;
+    performance.active.chordRelationship = null;
   }
 }
 
@@ -134,7 +134,7 @@ function setPassiveTimeout(performance, duration) {
 function clearActive(performance) {
   performance.active.notes.clear();
   performance.active.order = [];
-  performance.active.cr = null;
+  performance.active.chordRelationship = null;
 }
 
 function clearPassive(performance) {

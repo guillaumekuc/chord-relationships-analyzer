@@ -32,29 +32,17 @@ import Keyboard from './components/Keyboard.vue'
 import Analyzer from './components/Analyzer.vue'
 import ConfigInspector from './components/ConfigInspector.vue'
 
-// Store imports - use direct imports for better performance
-import { usePerformanceStore } from './store/modules/performance.js'
-import { useConfigStore } from './store/modules/config.js'
-import { useAudioStore } from './store/modules/audio.js'
-import { usePlayerStore } from './store/modules/player.js'
-import { useInstrumentsStore } from './store/modules/instruments.js'
+// Store imports
+import { useStores } from './store/index.js'
 
 // Utils imports
 import ShortcutManager from './utils/ShortcutManager.js'
 
-// Store usage - direct imports for better performance
-const performanceStore = usePerformanceStore()
-const configStore = useConfigStore()
-const audioStore = useAudioStore()
-const playerStore = usePlayerStore()
-const instrumentsStore = useInstrumentsStore()
+// Store usage - unified API
+const stores = useStores()
 
-// Initialize shortcut manager with the stores it actually uses
-const shortcutManager = new ShortcutManager({
-  performance: performanceStore,
-  config: configStore,
-  player: playerStore  // Pass the Player store, which has the methods
-})
+// Initialize shortcut manager with the unified stores
+const shortcutManager = new ShortcutManager(stores)
 shortcutManager.init()
 </script>
 

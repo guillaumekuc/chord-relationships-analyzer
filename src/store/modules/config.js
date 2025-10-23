@@ -12,20 +12,26 @@ export const useConfigStore = defineStore('config', {
   }),
   
   actions: {
-    toggleSustain() {
-      this.sustain = !this.sustain
+    // Generic, flexible actions
+    set(key, value) {
+      this[key] = value
     },
     
-    toggleFadeout() {
-      this.fadeout = !this.fadeout
+    toggle(key) {
+      this[key] = !this[key]
     },
     
-    toggleAutotrigger() {
-      this.autotrigger = !this.autotrigger
-    },
-    
-    setKeymap(keymap) {
-      this.keymap = keymap
+    cycle(key, options) {
+      const currentValue = this[key]
+      const availableOptions = Array.isArray(options) ? options : Object.keys(options)
+      
+      if (availableOptions.includes(currentValue)) {
+        const index = availableOptions.indexOf(currentValue)
+        const nextIndex = (index + 1) % availableOptions.length
+        this[key] = availableOptions[nextIndex]
+      } else {
+        this[key] = availableOptions[0]
+      }
     }
   }
 })

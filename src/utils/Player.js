@@ -10,31 +10,10 @@ export default class Player {
   }
 
   pressNote(midi) {
-    debugLog(`Press note: ${midi}`);
-    
-    switch (this.stores.config.sustain) {
-      case true:
-        if (this.stores.performance.active.notes.has(midi)) {
-          this.stores.performance.noteOff(midi, this.stores.config);
-        } else {
-          this.stores.performance.noteOn(midi, this.stores.config);
-          const frequency = Convert.midiToHz(midi);
-          this.stores.audio.playTone(frequency);
-        }
-        break;
-      case false:
-        this.stores.performance.noteOn(midi, this.stores.config);
-        const frequency = Convert.midiToHz(midi);
-        this.stores.audio.playTone(frequency);
-        break;
-    }
+    this.stores.actions.pressNote.execute(midi);
   }
 
   releaseNote(midi) {
-    debugLog(`Release note: ${midi}`);
-    if (this.stores.config.sustain) { 
-      return; 
-    } 
-    this.stores.performance.noteOff(midi, this.stores.config);
+    this.stores.actions.releaseNote.execute(midi);
   }
 }

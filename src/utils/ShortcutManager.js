@@ -23,16 +23,16 @@ export default class ShortcutManager {
     if (e.repeat) { return; }
 
     if (e.key === 'Enter') {
-      this.stores.performance.validate(this.stores.config);
+      this.stores.actions.validateChord.execute();
     }
 
     if (e.key === 'Escape' || e.key === 'Esc') {
       debugLog('Reset');
-      this.stores.performance.reset();
+      this.stores.actions.resetPerformance.execute();
     }
     if (e.key === 'Backspace' || e.key === 'Delete') {
       debugLog('Clear last note');
-      this.stores.performance.clearLast(this.stores.config);
+      this.stores.actions.removeLastNote.execute();
     }
 
     const map = keymap[this.stores.config.keymap];
@@ -41,7 +41,7 @@ export default class ShortcutManager {
 
     debugLog(`Key: ${e.key} -> MIDI ${midi}`);
 
-    this.stores.player.pressNote(midi);
+    this.stores.actions.pressNote.execute(midi);
   }
 
   handleKeyUp = (e) => {
@@ -51,6 +51,6 @@ export default class ShortcutManager {
     if (this.stores.config.sustain) { 
       return; 
     } 
-    this.stores.player.releaseNote(midi);
+    this.stores.actions.releaseNote.execute(midi);
   }
 }

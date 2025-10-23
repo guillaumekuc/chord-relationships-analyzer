@@ -3,7 +3,7 @@
     <div class="cr-container">
       <span :class="performanceStore.passive.chord?.name ? 'passive' : ''">{{ performanceStore.passive.chord?.name ?? "" }}</span>
       <span :class="performanceStore.passive.chord?.name && performanceStore.active.chord?.name ? 'separator' : ''"></span>
-      <span class="cr">{{ performanceStore.active?.cr ?? "" }}</span>
+      <span class="cr">{{ performanceStore.active?.chordRelationship ?? "" }}</span>
       <span :class="performanceStore.passive.chord?.name && performanceStore.active.chord?.name ? 'separator' : ''"></span>
       <span :class="performanceStore.active.chord?.name ? 'active' : ''">{{ performanceStore.active.chord?.name ?? "" }}</span>
     </div>

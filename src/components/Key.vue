@@ -33,8 +33,7 @@
 
 <script setup>
 import { ref } from 'vue'
-import { usePerformanceStore } from '../store/modules/performance.js'
-import { useInstrumentsStore } from '../store/modules/instruments.js'
+import { useStores } from '../store/index.js'
 
 const props = defineProps({
   note: { type: String, required: true },
@@ -47,8 +46,9 @@ const props = defineProps({
   parent: { type: String, required: true }
 })
 
-const performanceStore = usePerformanceStore()
-const instrumentsStore = useInstrumentsStore()
+const stores = useStores()
+const performanceStore = stores.performance
+const instrumentsStore = stores.instruments
 
 const pressed = ref(false)
 let activePointerId = null
@@ -59,7 +59,7 @@ function onPointerDown(e) {
   activePointerId = e.pointerId
   pressed.value = true
   e.currentTarget.setPointerCapture(e.pointerId)
-  performanceStore.noteOn(props.midi)
+  stores.actions.pressNote.execute(props.midi)
 }
 
 function onPointerUp(e) {
@@ -68,13 +68,13 @@ function onPointerUp(e) {
   pressed.value = false
   activePointerId = null
   try { e.currentTarget.releasePointerCapture(e.pointerId) } catch {}
-  performanceStore.noteOff(props.midi)
+  stores.actions.releaseNote.execute(props.midi)
 }
 
 function onPointerCancel(e) {
   if (e.pointerId !== activePointerId) return
 
-  if (pressed.value) performanceStore.noteOff(props.midi)
+  if (pressed.value) stores.actions.releaseNote.execute(props.midi)
   pressed.value = false
   activePointerId = null
   try { e.currentTarget.releasePointerCapture(e.pointerId) } catch {}
@@ -92,9 +92,9 @@ function onPointerLeave() {
 
   .piano-key {
     display: inline-block;
-    width: 40px; /* total= 44px w/ margins */
-    height: 160px;
-    margin: 0 2px;
+    width: var(--key-width);
+    height: var(--key-height);
+    margin: 0 var(--key-margin);
     background: var(--color-light);
     border-radius: 0 0 5px 5px;
     box-sizing: border-box;
@@ -120,10 +120,10 @@ function onPointerLeave() {
   }
 
   .key-upper {
-    width: 26px;
-    height: 100px;
+    width: var(--upper-key-width);
+    height: var(--upper-key-height);
     position: absolute;
-    left: 29px; /* (lower key width + margins/2) - (upper key width / 2) = 42 - 13 = 29px*/
+    left: var(--upper-key-offset);
     z-index: 2;
   }
 
