@@ -1,7 +1,7 @@
 <template>
 
 
-  <div class="analyzer">
+  <article class="analyzer">
   
     <h1></h1>
     <div class="cr-container">
@@ -12,14 +12,15 @@
       <span :class="store.performance.active.chord?.name ? 'active' : ''">{{store.performance.active.chord?.name ?? ""}}</span>
       
     </div>
-  </div>
+  </article>
 </template>
 
 <script setup>
+// Internal imports
+import { useStore } from '../store'
 
-  import { useStore } from '../store';
-  const store = useStore();
-
+// Store usage
+const store = useStore()
 </script>
 
 <style scoped>
@@ -45,7 +46,8 @@
     justify-content: center;
     align-items: center;
     font-weight: bold;
-    height: 120px;
+    margin-left:auto;
+    margin-right: auto;
   }
 
   .cr-container {

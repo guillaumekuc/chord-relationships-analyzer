@@ -7,4 +7,8 @@
   --color-hover: #ffd700;
   --color-active: #f90;
   --color-passive: #9f9f9f;
+
+  --pico-form-element-spacing-vertical: 0.125rem;
+  --pico-form-element-spacing-horizontal: 0.5rem;
+
 }

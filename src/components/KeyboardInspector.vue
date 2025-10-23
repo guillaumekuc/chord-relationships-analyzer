@@ -29,18 +29,23 @@
 </style>
 
 <script setup>
+// Internal imports
+import { useStore } from '../store'
 
-  import { useStore } from '../store';
-  const store = useStore(); 
+// Config imports
+import keyboardColorPatterns from "../config/keyboardColorPatterns.js"
+import keyboardRowPatterns from "../config/keyboardRowPatterns.js"
 
-  import keyboardColorPatterns from "../config/keyboardColorPatterns.js";
-  import keyboardRowPatterns from "../config/keyboardRowPatterns.js";
+// Props definition
+const props = defineProps({
+  parent: {type: String, required: true},
+})
 
-  const props = defineProps({
-    parent: {type: String, required: true},
-  });
+// Store usage
+const store = useStore()
 
-  function cycleColors() {
+// Methods
+function cycleColors() {
     const colors=store.instruments[props.parent].colors;
     const allColors=Object.keys(keyboardColorPatterns);
     if (allColors.includes(colors)){

@@ -1,6 +1,5 @@
 <template>
-  <div class="midi-console">
-    <div class="controls">
+    <div class="midi-console">
       <button @click="connect" :disabled="isConnected || !isWebMidi">
         {{ isWebMidi ? (isConnected ? 'MIDI Connected' : 'Enable MIDI') : 'Web MIDI not supported' }}
       </button>
@@ -17,108 +16,123 @@
         </option>
       </select>
     </div>
-
-    
-  </div>
 </template>
 
 <script setup>
-import { ref, onBeforeUnmount } from 'vue';
-import { useStore } from '../store';
-const store = useStore();
+// Vue imports
+import { ref, onBeforeUnmount } from 'vue'
 
+// Internal imports
+import { useStore } from '../store'
 
-const isWebMidi = typeof navigator !== 'undefined' && 'requestMIDIAccess' in navigator;
-const isConnected = ref(false);
-const log = ref('');
-const access = ref(null);
-const input = ref(null);
-const inputs = ref([]);        // [{ id, name, manufacturer }]
-const selectedId = ref('');
+// Store usage
+const store = useStore()
 
-function write(...parts) {
-  log.value += parts.join(' ') + '\n';
-}   
+// Reactive data
+const isWebMidi = typeof navigator !== 'undefined' && 'requestMIDIAccess' in navigator
+const isConnected = ref(false)
+const log = ref('')
+const access = ref(null)
+const input = ref(null)
+const inputs = ref([])        // [{ id, name, manufacturer }]
+const selectedId = ref('')
 
-async function connect() {
-  if (!isWebMidi || isConnected.value) return;
+  function write(...parts) {
+    log.value += parts.join(' ') + '\n';
+  }   
 
-  try {
-    access.value = await navigator.requestMIDIAccess({ sysex: false });
-    isConnected.value = true;
-    write('MIDI ready');
+  async function connect() {
+    if (!isWebMidi || isConnected.value) return;
 
-    refreshInputs();
-    access.value.onstatechange = refreshInputs; // hot-plug updates
-  } catch (e) {
-    write('Failed to get MIDI access:', String(e));
-  }
-}
+    try {
+      access.value = await navigator.requestMIDIAccess({ sysex: false });
+      isConnected.value = true;
+      write('MIDI ready');
 
-function refreshInputs() {
-  if (!access.value) return;
-
-  inputs.value = Array.from(access.value.inputs.values()).map(i => ({
-    id: i.id,
-    name: i.name,
-    manufacturer: i.manufacturer
-  }));
-
-  if (!inputs.value.find(i => i.id === selectedId.value)) {
-    selectedId.value = inputs.value[0]?.id || '';
+      refreshInputs();
+      access.value.onstatechange = refreshInputs; // hot-plug updates
+    } catch (e) {
+      write('Failed to get MIDI access:', String(e));
+    }
   }
 
-  bindSelected();
-}
+  function refreshInputs() {
+    if (!access.value) return;
 
-function bindSelected() {
-  if (!access.value) return;
+    inputs.value = Array.from(access.value.inputs.values()).map(i => ({
+      id: i.id,
+      name: i.name,
+      manufacturer: i.manufacturer
+    }));
 
-  if (input.value) input.value.onmidimessage = null;
+    if (!inputs.value.find(i => i.id === selectedId.value)) {
+      selectedId.value = inputs.value[0]?.id || '';
+    }
 
-  input.value = selectedId.value ? access.value.inputs.get(selectedId.value) : null;
-
-  if (input.value) {
-    input.value.onmidimessage = onMessage;
-    write(`Listening on: ${input.value.name || 'Unknown device'}`);
-  } else {
-    write('No input selected.');
+    bindSelected();
   }
-}
 
-function onMessage(e) {
-  const [status, data1 = 0, data2 = 0] = e.data;
-  const type = status & 0xf0;
-  const channel = (status & 0x0f) + 1;
+  function bindSelected() {
+    if (!access.value) return;
 
-  if (type === 0x90) {
-    if (data2 === 0) write(`Note Off  ch=${channel} note=${data1}`);
-    else write(`Note On   ch=${channel} note=${data1} vel=${data2}`);
-    console.log(store);
-    store.player.PressNote(data1);
-  } else if (type === 0x80) {
-    write(`Note Off  ch=${channel} note=${data1} vel=${data2}`);
-  } else {
-    write(`MIDI ${e.data.join(',')}`);
+    if (input.value) input.value.onmidimessage = null;
+
+    input.value = selectedId.value ? access.value.inputs.get(selectedId.value) : null;
+
+    if (input.value) {
+      input.value.onmidimessage = onMessage;
+      write(`Listening on: ${input.value.name || 'Unknown device'}`);
+    } else {
+      write('No input selected.');
+    }
   }
-}
 
-onBeforeUnmount(() => {
-  if (input.value) input.value.onmidimessage = null;
-  if (access.value) access.value.onstatechange = null;
-});
+  function onMessage(e) {
+    const [status, data1 = 0, data2 = 0] = e.data;
+    const type = status & 0xf0;
+    const channel = (status & 0x0f) + 1;
+
+    if (type === 0x90) {
+      if (data2 === 0) write(`Note Off  ch=${channel} note=${data1}`);
+      else write(`Note On   ch=${channel} note=${data1} vel=${data2}`);
+      console.log(store);
+      store.player.PressNote(data1);
+    } else if (type === 0x80) {
+      write(`Note Off  ch=${channel} note=${data1} vel=${data2}`);
+    } else {
+      write(`MIDI ${e.data.join(',')}`);
+    }
+  }
+
+  onBeforeUnmount(() => {
+    if (input.value) input.value.onmidimessage = null;
+    if (access.value) access.value.onstatechange = null;
+  });
 </script>
 
 <style scoped>
-.midi-console { display: grid; gap: .75rem; max-width: 640px; }
-.controls { display: flex; gap: .5rem; align-items: center; flex-wrap: wrap; }
-button {
-  padding: .5rem .8rem; border: 1px solid #ccc; border-radius: .375rem;
-  background: #f7f7f7; cursor: pointer;
-}
-button:disabled { opacity: .6; cursor: not-allowed; }
-select {
-  padding: .4rem .5rem; border: 1px solid #ccc; border-radius: .375rem; min-width: 260px;
-}
+
+  button {
+    display: inline-block;
+    white-space: nowrap;
+
+  }
+
+  select {
+    margin-bottom: 0px;
+  }
+
+
+  .midi-console { 
+    display: flex;
+    gap: 0.5rem;
+    width: 600px;
+    margin-bottom: var(--pico-spacing);
+  }
+
+
+
+  button:disabled { opacity: .6; cursor: not-allowed; }
+
 
 </style>

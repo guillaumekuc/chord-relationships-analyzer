@@ -9,11 +9,12 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@picocss/pico": "^2.1.1",
     "pinia": "^3.0.3",
     "vue": "^3.4.0"
   },
   "devDependencies": {
     "@vitejs/plugin-vue": "^5.0.0",
-    "vite": "^5.0.0"
+    "vite": "^7.1.12"
   }
 }

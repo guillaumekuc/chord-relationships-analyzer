@@ -1,12 +1,14 @@
 <template>
-	<section class="ConfigInspector">
-Keymap: <button @click="cycleKeymaps">{{store.config.keymap}} </button>
-Sustain <button @click="store.config.sustain= !store.config.sustain"> {{store.config.sustain}}</button>
-Fadeout: <button @click="store.config.fadeout = !store.config.fadeout"> {{store.config.fadeout}} </button>
-Autotrigger: <button @click="store.config.autotrigger = !store.config.autotrigger"> {{ store.config.autotrigger }}</button>
+	<details>
+		<summary><i class="fas fa-cog"></i> Config</summary>
+		<section class="ConfigInspector">
+			Keymap: <button @click="cycleKeymaps">{{store.config.keymap}} </button>
+			Sustain <button @click="store.config.sustain= !store.config.sustain"> {{store.config.sustain}}</button>
+			Fadeout: <button @click="store.config.fadeout = !store.config.fadeout"> {{store.config.fadeout}} </button>
+			Autotrigger: <button @click="store.config.autotrigger = !store.config.autotrigger"> {{ store.config.autotrigger }}</button>
 
-	</section>
-
+		</section>
+	</details>
 </template>
 
 <style scoped>
@@ -18,12 +20,17 @@ Autotrigger: <button @click="store.config.autotrigger = !store.config.autotrigge
 </style>
 
 <script setup>
-	import keymaps from '../config/keymap.js';
+// Config imports
+import keymaps from '../config/keymap.js'
 
-	import {useStore} from '../store';
-	const store= useStore();
-	
-	function cycleKeymaps() {
+// Internal imports
+import { useStore } from '../store'
+
+// Store usage
+const store = useStore()
+
+// Methods
+function cycleKeymaps() {
 	  const keymap=store.config.keymap;
 	  const allKeymaps=Object.keys(keymaps);
 	  console.log(keymap);

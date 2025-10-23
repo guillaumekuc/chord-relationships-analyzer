@@ -1,66 +1,69 @@
 <template>
-  <div class="Keyboard-container">
-  <KeyboardInspector
-    :parent="props.id"
-  />
-  <div class="keyboard">
+  <section class="Keyboard-container">
+    <KeyboardInspector
+      :parent="props.id"
+    />
+    <div class="keyboard">
 
-    <div
-      v-for="(slot, idx) in slots"
-      class="slot"
-    >
-      <Key
-        :note="slot.lower.note"
-        :keyboard="slot.lower.keyboard"
-        :midi="slot.lower.midi"
-        :frequency="slot.lower.frequency"
-        :is-upper="false"
-        :is-black="slot.lower.color==='b' ? true : false"
-        :is-active="store.performance.active.notes.has(slot.lower.midi)"
-        :is-passive="store.performance.passive.notes.has(slot.lower.midi)"
-        :parent="props.id"
-        @press="onPress"
-        @release="onRelease"
-      />
+      <div
+        v-for="(slot, idx) in slots"
+        :key="`slot-${idx}-${slot.lower.midi}`"
+        class="slot"
+      >
+        <Key
+          :note="slot.lower.note"
+          :keyboard="slot.lower.keyboard"
+          :midi="slot.lower.midi"
+          :frequency="slot.lower.frequency"
+          :is-upper="false"
+          :is-black="slot.lower.color==='b' ? true : false"
+          :is-active="store.performance.active.notes.has(slot.lower.midi)"
+          :is-passive="store.performance.passive.notes.has(slot.lower.midi)"
+          :parent="props.id"
+          @press="onPress"
+          @release="onRelease"
+        />
 
-      <Key
-        v-if="slot.upper"
-        :note="slot.upper.note"
-        :keyboard="slot.upper.keyboard"
-        :midi="slot.upper.midi"
-        :frequency="slot.upper.frequency"
-        :is-upper="true"
-        :is-black="slot.upper.color==='b' ? true : false"
-        :is-active="store.performance.active.notes.has(slot.upper.midi)"
-        :is-passive="store.performance.passive.notes.has(slot.upper.midi)"
-        :parent="props.id"
-        class="upper-overlay"
-        @press="onPress"
-        @release="onRelease"
-      />
+        <Key
+          v-if="slot.upper"
+          :note="slot.upper.note"
+          :keyboard="slot.upper.keyboard"
+          :midi="slot.upper.midi"
+          :frequency="slot.upper.frequency"
+          :is-upper="true"
+          :is-black="slot.upper.color==='b' ? true : false"
+          :is-active="store.performance.active.notes.has(slot.upper.midi)"
+          :is-passive="store.performance.passive.notes.has(slot.upper.midi)"
+          :parent="props.id"
+          class="upper-overlay"
+          @press="onPress"
+          @release="onRelease"
+        />
+      </div>
     </div>
-  </div>
-  </div>
+  </section>
 </template>
 
 
 
 <script setup>
+// Vue imports
+import { computed } from 'vue'
 
-import { computed } from 'vue';
-import { useStore } from '../store';
+// Internal imports
+import { useStore } from '../store'
+import Key from './Key.vue'
+import KeyboardInspector from './KeyboardInspector.vue'
 
-import Key from './Key.vue'; 
-import KeyboardInspector from './KeyboardInspector.vue';
+// Config imports
+import keymap from '../config/keymap.js'
+import keyboardRowPatterns from '../config/keyboardRowPatterns.js'
+import keyboardColorPatterns from '../config/keyboardColorPatterns.js'
 
-import keymap from '../config/keymap.js';
-import keyboardRowPatterns from '../config/keyboardRowPatterns.js';
-import keyboardColorPatterns from '../config/keyboardColorPatterns.js';
+// Utils imports
+import Convert from '../utils/Convert.js'
 
-import Convert from '../utils/Convert.js';
-
-const store = useStore();
-
+// Props definition
 const props = defineProps({
   startOctave: { type: Number, default: 3 },
   octaves: { type: Number, default: 2 },
@@ -71,7 +74,14 @@ const props = defineProps({
   displayKeyboardLabels: {type: Boolean, default: false},
 })
 
-store.instruments[props.id]={
+// Emits definition
+const emit = defineEmits(['press', 'release'])
+
+// Store usage
+const store = useStore()
+
+// Initialize instrument in store
+store.instruments[props.id] = {
   layout: props.layout,
   colors: props.colors,
   display: {
@@ -80,18 +90,12 @@ store.instruments[props.id]={
   }
 }
 
-console.log(props);
-
-const layout= computed(()=> store.instruments[props.id].layout);
-const colors= computed(()=> store.instruments[props.id].colors);
-console.log("colors:", colors);
-
-const pattern = computed (()=> keyboardRowPatterns[layout.value]);
-const colorPattern= computed(()=> keyboardColorPatterns[colors.value]); //@WIP
-console.log("colorPattern:", colorPattern);
-const midiToKey = computed (()=> keymap[store.config.keymap]) ;
-
-const emit = defineEmits(['press', 'release']); //bubble-up
+// Computed properties
+const layout = computed(() => store.instruments[props.id].layout)
+const colors = computed(() => store.instruments[props.id].colors)
+const pattern = computed(() => keyboardRowPatterns[layout.value])
+const colorPattern = computed(() => keyboardColorPatterns[colors.value])
+const midiToKey = computed(() => keymap[store.config.keymap])
 
 
 // Build slots (each slot renders a white key + a black key on top)
@@ -174,11 +178,14 @@ function onRelease(midi) {
 <style scoped>
 
 .Keyboard-container {
+  margin-left:auto;
+  margin-right:auto;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   margin-bottom: 2rem;
+  width: fit-content;
 }
 
 .keyboard {

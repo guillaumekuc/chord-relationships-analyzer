@@ -3,12 +3,12 @@
     :class="[
       'piano-key',
       {
-        'key-lower': !key.isUpper,
-        'key-upper': key.isUpper,
-        'key-white': !key.isBlack,
-        'key-black': key.isBlack,
-        'key-active': key.isActive,
-        'key-passive': key.isPassive
+        'key-lower': !props.isUpper,
+        'key-upper': props.isUpper,
+        'key-white': !props.isBlack,
+        'key-black': props.isBlack,
+        'key-active': props.isActive,
+        'key-passive': props.isPassive
       }
     ]"
     @pointerdown.prevent="onPointerDown"
@@ -17,44 +17,49 @@
     @pointerleave="onPointerLeave"
   >
     <span
-      :class="{ hidden: !store.instruments[key.parent].display.keyboardLabels }"
+      :class="{ hidden: !store.instruments[props.parent].display.keyboardLabels }"
       class="keyboard-mapping-label"
     >
-      {{ key.keyboard }}
+      {{ props.keyboard }}
     </span>
     <span
-      :class="{ hidden: !store.instruments[key.parent].display.noteLabels }"
+      :class="{ hidden: !store.instruments[props.parent].display.noteLabels }"
       class="note-label"
     >
-      {{ key.note }}
+      {{ props.note }}
     </span>
   </div>
 </template>
 
 <script setup>
-  import { ref } from 'vue'
-  import { useStore } from '../store'
-  const store = useStore()
+// Vue imports
+import { ref } from 'vue'
 
-  // Props
-  const key = defineProps({
-    note: { type: String, required: true },
-    midi: { type: Number, required: true },
-    keyboard: { type: String },
-    frequency: { type: Number, required: true },
-    isUpper: { type: Boolean, default: false, required: true },
-    isBlack: { type: Boolean, default: false, required: true },
-    isActive: { type: Boolean, default: false },
-    isPassive: { type: Boolean, default: false },
-    parent: { type: String, required: true }
-  })
+// Internal imports
+import { useStore } from '../store'
 
-  // Bubble-up
-  const emit = defineEmits(['press', 'release'])
+// Props definition
+const props = defineProps({
+  note: { type: String, required: true },
+  midi: { type: Number, required: true },
+  keyboard: { type: String },
+  frequency: { type: Number, required: true },
+  isUpper: { type: Boolean, default: false, required: true },
+  isBlack: { type: Boolean, default: false, required: true },
+  isActive: { type: Boolean, default: false },
+  isPassive: { type: Boolean, default: false },
+  parent: { type: String, required: true }
+})
 
-  // Press state
-  const pressed = ref(false)
-  let activePointerId = null
+// Emits definition
+const emit = defineEmits(['press', 'release'])
+
+// Store usage
+const store = useStore()
+
+// Reactive data
+const pressed = ref(false)
+let activePointerId = null
 
   function onPointerDown(e) {
     // If it's a mouse, only accept left button (0). Touch/pen don't set button.
@@ -67,7 +72,7 @@
     // pointer leaves the element.
     e.currentTarget.setPointerCapture(e.pointerId);
 
-    emit('press', key.midi)
+    emit('press', props.midi)
   }
 
   function onPointerUp(e) {
@@ -79,14 +84,14 @@
     // Release capture after we’re done
     try { e.currentTarget.releasePointerCapture(e.pointerId) } catch {}
 
-    emit('release', key.midi)
+    emit('release', props.midi)
   }
 
   function onPointerCancel(e) {
     if (e.pointerId !== activePointerId) return
 
     // Treat cancel as a release to avoid stuck notes
-    if (pressed.value) emit('release', key.midi)
+    if (pressed.value) emit('release', props.midi)
 
     pressed.value = false
     activePointerId = null
