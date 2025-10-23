@@ -3,9 +3,9 @@
 		<summary><i class="fas fa-cog"></i> Config</summary>
 		<section class="config-inspector">
 			Keymap: <button @click="cycleKeymaps">{{ configStore.keymap }} </button>
-			Sustain <button @click="configStore.sustain= !configStore.sustain"> {{ configStore.sustain }}</button>
-			Fadeout: <button @click="configStore.fadeout = !configStore.fadeout"> {{ configStore.fadeout }} </button>
-			Autotrigger: <button @click="configStore.autotrigger = !configStore.autotrigger"> {{ configStore.autotrigger }}</button>
+			Sustain <button @click="configStore.toggleSustain()"> {{ configStore.sustain }}</button>
+			Fadeout: <button @click="configStore.toggleFadeout()"> {{ configStore.fadeout }} </button>
+			Autotrigger: <button @click="configStore.toggleAutotrigger()"> {{ configStore.autotrigger }}</button>
 		</section>
 	</details>
 </template>
@@ -29,9 +29,9 @@ function cycleKeymaps() {
   if (allKeymaps.includes(keymap)) {
     const index = allKeymaps.indexOf(keymap)
     const nextIndex = (index + 1) % allKeymaps.length
-    configStore.keymap = allKeymaps[nextIndex]
+    configStore.setKeymap(allKeymaps[nextIndex])
   } else {
-    configStore.keymap = allKeymaps[0]
+    configStore.setKeymap(allKeymaps[0])
   }
 }
 </script>

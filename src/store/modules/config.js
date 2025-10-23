@@ -10,8 +10,23 @@ export const useConfigStore = defineStore('config', {
     fadeoutDuration: 2000,
     autotrigger: true,
   }),
+  
   actions: {
+    toggleSustain() {
+      this.sustain = !this.sustain
+    },
     
+    toggleFadeout() {
+      this.fadeout = !this.fadeout
+    },
+    
+    toggleAutotrigger() {
+      this.autotrigger = !this.autotrigger
+    },
+    
+    setKeymap(keymap) {
+      this.keymap = keymap
+    }
   }
 })
 
