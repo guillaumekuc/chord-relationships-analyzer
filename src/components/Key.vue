@@ -17,13 +17,13 @@
     @pointerleave="onPointerLeave"
   >
     <span
-      :class="{ hidden: !stores.audio.getInstrument(props.parent).display.keyboardLabels }"
+      :class="{ hidden: !stores.instruments.getInstrument(props.parent).display.keyboardLabels }"
       class="keyboard-mapping-label"
     >
       {{ props.keyboard }}
     </span>
     <span
-      :class="{ hidden: !stores.audio.getInstrument(props.parent).display.noteLabels }"
+      :class="{ hidden: !stores.instruments.getInstrument(props.parent).display.noteLabels }"
       class="note-label"
     >
       {{ props.note }}
@@ -68,7 +68,7 @@ let activePointerId = null
     // pointer leaves the element.
     e.currentTarget.setPointerCapture(e.pointerId);
 
-    stores.audio.player.PressNote(props.midi)
+    stores.player.pressNote(props.midi)
   }
 
   function onPointerUp(e) {
@@ -80,7 +80,7 @@ let activePointerId = null
     // Release capture after we’re done
     try { e.currentTarget.releasePointerCapture(e.pointerId) } catch {}
 
-    stores.audio.player.ReleaseNote(props.midi)
+    stores.player.releaseNote(props.midi)
   }
 
   function onPointerCancel(e) {

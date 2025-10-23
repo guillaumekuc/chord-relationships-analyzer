@@ -23,13 +23,16 @@ const stores = useStores();
 const audioEngine = new AudioEngine();
 const player = new Player(stores);
 
-// Set up audio store
-stores.audio.initializeAudio(audioEngine, player);
+// Set up stores
+stores.audio.initializeAudio(audioEngine);
+stores.player.initializePlayer(player);
 
 // optional: expose globally for console
 window.API = {
   stores,
   performance: stores.performance,
   config: stores.config,
-  audio: stores.audio
+  audio: stores.audio,
+  player: stores.player,
+  instruments: stores.instruments
 };

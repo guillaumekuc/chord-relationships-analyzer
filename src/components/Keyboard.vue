@@ -70,8 +70,8 @@ const props = defineProps({
 // Store usage
 const stores = useStores()
 
-// Initialize instrument in audio store
-stores.audio.setInstrument(props.id, {
+// Initialize instrument in instruments store
+stores.instruments.setInstrument(props.id, {
   layout: props.layout,
   colors: props.colors,
   display: {
@@ -81,8 +81,8 @@ stores.audio.setInstrument(props.id, {
 })
 
 // Computed properties
-const layout = computed(() => stores.audio.getInstrument(props.id).layout)
-const colors = computed(() => stores.audio.getInstrument(props.id).colors)
+const layout = computed(() => stores.instruments.getInstrument(props.id).layout)
+const colors = computed(() => stores.instruments.getInstrument(props.id).colors)
 const pattern = computed(() => keyboardRowPatterns[layout.value])
 const colorPattern = computed(() => keyboardColorPatterns[colors.value])
 const midiToKey = computed(() => keymap[stores.config.keymap])

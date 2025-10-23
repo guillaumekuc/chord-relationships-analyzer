@@ -86,14 +86,14 @@ const selectedId = ref('')
     if (type === 0x90) {
       if (data2 === 0) {
         // Note Off
-        stores.audio.player.ReleaseNote(data1);
+        stores.player.releaseNote(data1);
       } else {
         // Note On
-        stores.audio.player.PressNote(data1);
+        stores.player.pressNote(data1);
       }
     } else if (type === 0x80) {
       // Note Off
-      stores.audio.player.ReleaseNote(data1);
+      stores.player.releaseNote(data1);
     }
   }
 

@@ -1,9 +1,9 @@
 <template>
   <section class="KeyboardInspector">
-    <span>Layout: <button @click="cycleLayouts">{{stores.audio.getInstrument(props.parent).layout}}</button></span>
-    <span>Colors: <button @click="cycleColors">{{stores.audio.getInstrument(props.parent).colors}}</button></span>
-    <span><button @click="stores.audio.getInstrument(props.parent).display.keyboardLabels= !stores.audio.getInstrument(props.parent).display.keyboardLabels"> Keyboard Labels</button></span>
-    <span><button @click="stores.audio.getInstrument(props.parent).display.noteLabels= !stores.audio.getInstrument(props.parent).display.noteLabels"> Note Labels</button></span>
+    <span>Layout: <button @click="cycleLayouts">{{stores.instruments.getInstrument(props.parent).layout}}</button></span>
+    <span>Colors: <button @click="cycleColors">{{stores.instruments.getInstrument(props.parent).colors}}</button></span>
+    <span><button @click="stores.instruments.getInstrument(props.parent).display.keyboardLabels= !stores.instruments.getInstrument(props.parent).display.keyboardLabels"> Keyboard Labels</button></span>
+    <span><button @click="stores.instruments.getInstrument(props.parent).display.noteLabels= !stores.instruments.getInstrument(props.parent).display.noteLabels"> Note Labels</button></span>
   </section>
 </template>
 
@@ -46,7 +46,7 @@ const stores = useStores()
 
 // Methods
 function cycleColors() {
-    const instrument = stores.audio.getInstrument(props.parent);
+    const instrument = stores.instruments.getInstrument(props.parent);
     const colors = instrument.colors;
     const allColors=Object.keys(keyboardColorPatterns);
     if (allColors.includes(colors)){
@@ -59,7 +59,7 @@ function cycleColors() {
   }
 
   function cycleLayouts() {
-    const instrument = stores.audio.getInstrument(props.parent);
+    const instrument = stores.instruments.getInstrument(props.parent);
     const layout = instrument.layout;
     const allLayouts=Object.keys(keyboardRowPatterns);
     if (allLayouts.includes(layout)){

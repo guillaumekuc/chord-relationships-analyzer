@@ -1,6 +1,8 @@
 import { usePerformanceStore } from './modules/performance.js'
 import { useConfigStore } from './modules/config.js'
 import { useAudioStore } from './modules/audio.js'
+import { usePlayerStore } from './modules/player.js'
+import { useInstrumentsStore } from './modules/instruments.js'
 
 // Unified API that provides access to all stores
 export const useStores = () => {
@@ -8,6 +10,8 @@ export const useStores = () => {
     performance: usePerformanceStore(),
     config: useConfigStore(),
     audio: useAudioStore(),
+    player: usePlayerStore(),
+    instruments: useInstrumentsStore(),
   }
 }
 
@@ -15,3 +19,5 @@ export const useStores = () => {
 export { usePerformanceStore } from './modules/performance.js'
 export { useConfigStore } from './modules/config.js'
 export { useAudioStore } from './modules/audio.js'
+export { usePlayerStore } from './modules/player.js'
+export { useInstrumentsStore } from './modules/instruments.js'
