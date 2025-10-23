@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import { useConfigStore } from './config.js';
 import Triads from "../../theory/Triads.js";
 import Intervals from "../../theory/Intervals.js";
 import * as Common from "../../theory/common.js";
@@ -21,32 +20,29 @@ export const usePerformanceStore = defineStore('performance', {
   }),
 
   actions: {
-    noteOn(note) {
-      const config = useConfigStore();
+    noteOn(note, config = {}) {
       if (!this.active.notes.has(note)) {
         this.active.notes.add(note);
         this.active.order.push(note);
       }
 
       computeChord(this);
-      if (config.autotrigger) { this.validate() };
+      if (config.autotrigger) { this.validate(config) };
     },
 
-    noteOff(note) {
-      const config = useConfigStore();
-
+    noteOff(note, config = {}) {
       if (this.active.notes.has(note)) {
         this.active.notes.delete(note);
         this.active.order = this.active.order.filter(n => n !== note);
       }
 
       computeChord(this);
-      if (config.autotrigger) { this.validate() };
+      if (config.autotrigger) { this.validate(config) };
     },
 
-    validate() {
+    validate(config = {}) {
       if (this.active.chord) {
-        copyActiveToPassive(this);
+        copyActiveToPassive(this, config);
         clearActive(this);
       } else {
         console.log('invalid chord');
@@ -58,13 +54,12 @@ export const usePerformanceStore = defineStore('performance', {
       clearPassive(this);
     },
 
-    clearLast() {
-      const config = useConfigStore();
+    clearLast(config = {}) {
       const lastNote = this.active.order.pop();
       if (lastNote !== undefined) {
         this.active.notes.delete(lastNote);
         computeChord(this);
-        if (config.autotrigger) { this.validate() };
+        if (config.autotrigger) { this.validate(config) };
       }
     },
   },
@@ -95,9 +90,7 @@ function computeCR(activeChord, passiveChord) {
   return `${passiveChord.quality} ${interval} ${activeChord.quality}`;
 }
 
-function copyActiveToPassive(performance) {
-  const config = useConfigStore();
-
+function copyActiveToPassive(performance, config = {}) {
   console.log('copyActiveToPassive');
   console.log(performance.active);
 

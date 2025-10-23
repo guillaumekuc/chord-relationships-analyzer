@@ -16,8 +16,8 @@
           :midi="slot.lower.midi"
           :is-upper="false"
           :is-black="slot.lower.color==='b' ? true : false"
-          :is-active="store.performance.active.notes.has(slot.lower.midi)"
-          :is-passive="store.performance.passive.notes.has(slot.lower.midi)"
+          :is-active="stores.performance.active.notes.has(slot.lower.midi)"
+          :is-passive="stores.performance.passive.notes.has(slot.lower.midi)"
           :parent="props.id"
         />
 
@@ -28,8 +28,8 @@
           :midi="slot.upper.midi"
           :is-upper="true"
           :is-black="slot.upper.color==='b' ? true : false"
-          :is-active="store.performance.active.notes.has(slot.upper.midi)"
-          :is-passive="store.performance.passive.notes.has(slot.upper.midi)"
+          :is-active="stores.performance.active.notes.has(slot.upper.midi)"
+          :is-passive="stores.performance.passive.notes.has(slot.upper.midi)"
           :parent="props.id"
           class="upper-overlay"
         />
@@ -45,7 +45,7 @@
 import { computed } from 'vue'
 
 // Internal imports
-import { useStore } from '../store'
+import { useStores } from '../store'
 import Key from './Key.vue'
 import KeyboardInspector from './KeyboardInspector.vue'
 
@@ -68,32 +68,32 @@ const props = defineProps({
 
 
 // Store usage
-const store = useStore()
+const stores = useStores()
 
-// Initialize instrument in store
-store.instruments[props.id] = {
+// Initialize instrument in audio store
+stores.audio.setInstrument(props.id, {
   layout: props.layout,
   colors: props.colors,
   display: {
     noteLabels: props.displayNoteLabels,
     keyboardLabels: props.displayKeyboardLabels,
   }
-}
+})
 
 // Computed properties
-const layout = computed(() => store.instruments[props.id].layout)
-const colors = computed(() => store.instruments[props.id].colors)
+const layout = computed(() => stores.audio.getInstrument(props.id).layout)
+const colors = computed(() => stores.audio.getInstrument(props.id).colors)
 const pattern = computed(() => keyboardRowPatterns[layout.value])
 const colorPattern = computed(() => keyboardColorPatterns[colors.value])
-const midiToKey = computed(() => keymap[store.config.keymap])
+const midiToKey = computed(() => keymap[stores.config.keymap])
 
 
 // Build slots (each slot renders a white key + a black key on top)
 // 6-6 Keyboard pattern, isomorphic layout.
 const slots = computed(() => {
   const slots = [];
-  const octaveStart= store.config.octaveStart;
-  const octaveEnd=store.config.octaveEnd;
+  const octaveStart= stores.config.octaveStart;
+  const octaveEnd=stores.config.octaveEnd;
 
   const octaves= octaveEnd - octaveStart;
   if (!octaves>0){ console.error('invalid range'); return;}

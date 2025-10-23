@@ -28,7 +28,7 @@
 
 <script setup>
 // Internal imports
-import { useStore } from './store'
+import { useStores } from './store'
 import MIDIConsole from './components/MIDIConsole.vue'
 import Keyboard from './components/Keyboard.vue'
 import Analyzer from './components/Analyzer.vue'
@@ -38,10 +38,10 @@ import ConfigInspector from './components/ConfigInspector.vue'
 import ShortcutManager from './utils/ShortcutManager.js'
 
 // Store usage
-const store = useStore()
+const stores = useStores()
 
 // Initialize shortcut manager
-const shortcutManager = new ShortcutManager(store)
+const shortcutManager = new ShortcutManager(stores)
 shortcutManager.init()
 </script>
 

@@ -1,9 +1,9 @@
 <template>
   <section class="KeyboardInspector">
-    <span>Layout: <button @click="cycleLayouts">{{store.instruments[props.parent].layout}}</button></span>
-    <span>Colors: <button @click="cycleColors">{{store.instruments[props.parent].colors}}</button></span>
-    <span><button @click="store.instruments[props.parent].display.keyboardLabels= !store.instruments[props.parent].display.keyboardLabels"> Keyboard Labels</button></span>
-    <span><button @click="store.instruments[props.parent].display.noteLabels= !store.instruments[props.parent].display.noteLabels"> Note Labels</button></span>
+    <span>Layout: <button @click="cycleLayouts">{{stores.audio.getInstrument(props.parent).layout}}</button></span>
+    <span>Colors: <button @click="cycleColors">{{stores.audio.getInstrument(props.parent).colors}}</button></span>
+    <span><button @click="stores.audio.getInstrument(props.parent).display.keyboardLabels= !stores.audio.getInstrument(props.parent).display.keyboardLabels"> Keyboard Labels</button></span>
+    <span><button @click="stores.audio.getInstrument(props.parent).display.noteLabels= !stores.audio.getInstrument(props.parent).display.noteLabels"> Note Labels</button></span>
   </section>
 </template>
 
@@ -30,7 +30,7 @@
 
 <script setup>
 // Internal imports
-import { useStore } from '../store'
+import { useStores } from '../store'
 
 // Config imports
 import keyboardColorPatterns from "../config/keyboardColorPatterns.js"
@@ -42,30 +42,32 @@ const props = defineProps({
 })
 
 // Store usage
-const store = useStore()
+const stores = useStores()
 
 // Methods
 function cycleColors() {
-    const colors=store.instruments[props.parent].colors;
+    const instrument = stores.audio.getInstrument(props.parent);
+    const colors = instrument.colors;
     const allColors=Object.keys(keyboardColorPatterns);
     if (allColors.includes(colors)){
       const index=allColors.indexOf(colors);
       const nextIndex = (index + 1) % allColors.length;
-      store.instruments[props.parent].colors = allColors[nextIndex];
+      instrument.colors = allColors[nextIndex];
     } else {
-      store.instruments[props.parent].colors = allColors[0];
+      instrument.colors = allColors[0];
     }
   }
 
   function cycleLayouts() {
-    const layout=store.instruments[props.parent].layout;
+    const instrument = stores.audio.getInstrument(props.parent);
+    const layout = instrument.layout;
     const allLayouts=Object.keys(keyboardRowPatterns);
     if (allLayouts.includes(layout)){
       const index=allLayouts.indexOf(layout);
       const nextIndex = (index + 1) % allLayouts.length;
-      store.instruments[props.parent].layout = allLayouts[nextIndex];
+      instrument.layout = allLayouts[nextIndex];
     } else {
-      store.instruments[props.parent].layout = allLayouts[0];
+      instrument.layout = allLayouts[0];
     }
     
   }

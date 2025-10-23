@@ -23,10 +23,10 @@
 import { ref, onBeforeUnmount } from 'vue'
 
 // Internal imports
-import { useStore } from '../store'
+import { useStores } from '../store'
 
 // Store usage
-const store = useStore()
+const stores = useStores()
 
 // Reactive data
 const isWebMidi = typeof navigator !== 'undefined' && 'requestMIDIAccess' in navigator
@@ -86,14 +86,14 @@ const selectedId = ref('')
     if (type === 0x90) {
       if (data2 === 0) {
         // Note Off
-        store.player.ReleaseNote(data1);
+        stores.audio.player.ReleaseNote(data1);
       } else {
         // Note On
-        store.player.PressNote(data1);
+        stores.audio.player.PressNote(data1);
       }
     } else if (type === 0x80) {
       // Note Off
-      store.player.ReleaseNote(data1);
+      stores.audio.player.ReleaseNote(data1);
     }
   }
 

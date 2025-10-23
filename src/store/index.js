@@ -1,13 +1,17 @@
 import { usePerformanceStore } from './modules/performance.js'
 import { useConfigStore } from './modules/config.js'
-import { defineStore } from 'pinia'
+import { useAudioStore } from './modules/audio.js'
 
-export const useStore = defineStore('main', {
-  state: () => ({
+// Unified API that provides access to all stores
+export const useStores = () => {
+  return {
     performance: usePerformanceStore(),
     config: useConfigStore(),
-    audio: null,
-    player: null,
-    instruments: {},
-  }),
-})
+    audio: useAudioStore(),
+  }
+}
+
+// Individual store exports for direct access when needed
+export { usePerformanceStore } from './modules/performance.js'
+export { useConfigStore } from './modules/config.js'
+export { useAudioStore } from './modules/audio.js'

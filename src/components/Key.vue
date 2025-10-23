@@ -17,13 +17,13 @@
     @pointerleave="onPointerLeave"
   >
     <span
-      :class="{ hidden: !store.instruments[props.parent].display.keyboardLabels }"
+      :class="{ hidden: !stores.audio.getInstrument(props.parent).display.keyboardLabels }"
       class="keyboard-mapping-label"
     >
       {{ props.keyboard }}
     </span>
     <span
-      :class="{ hidden: !store.instruments[props.parent].display.noteLabels }"
+      :class="{ hidden: !stores.audio.getInstrument(props.parent).display.noteLabels }"
       class="note-label"
     >
       {{ props.note }}
@@ -36,7 +36,7 @@
 import { ref } from 'vue'
 
 // Internal imports
-import { useStore } from '../store'
+import { useStores } from '../store'
 
 // Props definition
 const props = defineProps({
@@ -51,7 +51,7 @@ const props = defineProps({
 })
 
 // Store usage
-const store = useStore()
+const stores = useStores()
 
 // Reactive data
 const pressed = ref(false)
@@ -68,7 +68,7 @@ let activePointerId = null
     // pointer leaves the element.
     e.currentTarget.setPointerCapture(e.pointerId);
 
-    store.player.PressNote(props.midi)
+    stores.audio.player.PressNote(props.midi)
   }
 
   function onPointerUp(e) {
@@ -80,7 +80,7 @@ let activePointerId = null
     // Release capture after we’re done
     try { e.currentTarget.releasePointerCapture(e.pointerId) } catch {}
 
-    store.player.ReleaseNote(props.midi)
+    stores.audio.player.ReleaseNote(props.midi)
   }
 
   function onPointerCancel(e) {

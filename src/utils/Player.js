@@ -12,17 +12,17 @@ export default class Player {
 			case true:
 				
 				if (this.$store.performance.active.notes.has(midi)){
-					this.$store.performance.noteOff(midi);
+					this.$store.performance.noteOff(midi, this.$store.config);
 				} else {
-					this.$store.performance.noteOn(midi);
+					this.$store.performance.noteOn(midi, this.$store.config);
 					const frequency=Convert.midiToHz(midi);
-					this.$store.audio.playTone(frequency);
+					this.$store.audio.audio.playTone(frequency);
 				}
 				break
 			case false:
-				this.$store.performance.noteOn(midi);
+				this.$store.performance.noteOn(midi, this.$store.config);
 				const frequency= Convert.midiToHz(midi);
-				this.$store.audio.playTone(frequency);
+				this.$store.audio.audio.playTone(frequency);
 				break
 		}
 		console.log('pressNote')
@@ -31,7 +31,7 @@ export default class Player {
 	ReleaseNote(midi){
 		console.log('release note');
 		if (this.$store.config.sustain){ return } 
-		this.$store.performance.noteOff(midi);
+		this.$store.performance.noteOff(midi, this.$store.config);
 		
 	}
 }

@@ -3,11 +3,11 @@
 
   <article class="analyzer">
     <div class="cr-container">
-      <span :class="store.performance.passive.chord?.name ? 'passive' : ''">{{store.performance.passive.chord?.name ?? ""}}</span>
-      <span :class="store.performance.passive.chord?.name && store.performance.active.chord?.name ? 'separator' : ''"></span>
-      <span class="cr">{{store.performance.active?.cr ?? ""}}</span>
-      <span :class="store.performance.passive.chord?.name && store.performance.active.chord?.name ? 'separator' : ''"></span>
-      <span :class="store.performance.active.chord?.name ? 'active' : ''">{{store.performance.active.chord?.name ?? ""}}</span>
+      <span :class="stores.performance.passive.chord?.name ? 'passive' : ''">{{stores.performance.passive.chord?.name ?? ""}}</span>
+      <span :class="stores.performance.passive.chord?.name && stores.performance.active.chord?.name ? 'separator' : ''"></span>
+      <span class="cr">{{stores.performance.active?.cr ?? ""}}</span>
+      <span :class="stores.performance.passive.chord?.name && stores.performance.active.chord?.name ? 'separator' : ''"></span>
+      <span :class="stores.performance.active.chord?.name ? 'active' : ''">{{stores.performance.active.chord?.name ?? ""}}</span>
       
     </div>
   </article>
@@ -15,10 +15,10 @@
 
 <script setup>
 // Internal imports
-import { useStore } from '../store'
+import { useStores } from '../store'
 
 // Store usage
-const store = useStore()
+const stores = useStores()
 </script>
 
 <style scoped>

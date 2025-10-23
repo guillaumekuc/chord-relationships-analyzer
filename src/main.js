@@ -5,7 +5,7 @@ import { createPinia } from 'pinia';
 import App from './App.vue';
 import './styles/variables.css';
 
-import { useStore } from './store';
+import { useStores } from './store';
 
 import AudioEngine from './audio/AudioEngine.js';
 import Player from './utils/Player.js';
@@ -16,12 +16,20 @@ const pinia = createPinia();
 app.use(pinia);
 app.mount('#app');
 
+// Initialize stores
+const stores = useStores();
 
-const store = useStore();
+// Initialize audio and player
+const audioEngine = new AudioEngine();
+const player = new Player(stores);
 
-store.audio = new AudioEngine();
-store.player = new Player(store);
+// Set up audio store
+stores.audio.initializeAudio(audioEngine, player);
 
 // optional: expose globally for console
-window.API={};
-window.API.store=store;
+window.API = {
+  stores,
+  performance: stores.performance,
+  config: stores.config,
+  audio: stores.audio
+};

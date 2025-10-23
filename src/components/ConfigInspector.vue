@@ -2,10 +2,10 @@
 	<details>
 		<summary><i class="fas fa-cog"></i> Config</summary>
 		<section class="ConfigInspector">
-			Keymap: <button @click="cycleKeymaps">{{store.config.keymap}} </button>
-			Sustain <button @click="store.config.sustain= !store.config.sustain"> {{store.config.sustain}}</button>
-			Fadeout: <button @click="store.config.fadeout = !store.config.fadeout"> {{store.config.fadeout}} </button>
-			Autotrigger: <button @click="store.config.autotrigger = !store.config.autotrigger"> {{ store.config.autotrigger }}</button>
+			Keymap: <button @click="cycleKeymaps">{{stores.config.keymap}} </button>
+			Sustain <button @click="stores.config.sustain= !stores.config.sustain"> {{stores.config.sustain}}</button>
+			Fadeout: <button @click="stores.config.fadeout = !stores.config.fadeout"> {{stores.config.fadeout}} </button>
+			Autotrigger: <button @click="stores.config.autotrigger = !stores.config.autotrigger"> {{ stores.config.autotrigger }}</button>
 
 		</section>
 	</details>
@@ -24,21 +24,21 @@
 import keymaps from '../config/keymap.js'
 
 // Internal imports
-import { useStore } from '../store'
+import { useStores } from '../store'
 
 // Store usage
-const store = useStore()
+const stores = useStores()
 
 // Methods
 function cycleKeymaps() {
-	  const keymap=store.config.keymap;
+	  const keymap=stores.config.keymap;
 	  const allKeymaps=Object.keys(keymaps);
 	  if (allKeymaps.includes(keymap)){
 	    const index=allKeymaps.indexOf(keymap);
 	    const nextIndex = (index + 1) % allKeymaps.length;
-	    store.config.keymap = allKeymaps[nextIndex];
+	    stores.config.keymap = allKeymaps[nextIndex];
 	  } else {
-	    store.config.keymap = allKeymaps[0];
+	    stores.config.keymap = allKeymaps[0];
 	  }
 	}
 

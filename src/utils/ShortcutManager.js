@@ -20,7 +20,7 @@ export default class ShortcutManager {
 	  if (e.repeat) { return };
 
 	  if (e.key==="Enter") {
-	  	this.$store.performance.validate();
+	  	this.$store.performance.validate(this.$store.config);
 	  }
 
 	  if (e.key==='Escape' || e.key==='Esc' ){
@@ -30,7 +30,7 @@ export default class ShortcutManager {
 	  if (e.key==='Backspace' || e.key==="Delete"){
 	    console.log('backspace');
 	    //clearLastActive();
-	    this.$store.performance.clearLast();
+	    this.$store.performance.clearLast(this.$store.config);
 	  }
 
 	  const map = keymap[this.$store.config.keymap];
@@ -39,7 +39,7 @@ export default class ShortcutManager {
 
 	  console.log(e);
 
-		this.$store.player.PressNote(midi);
+		this.$store.audio.player.PressNote(midi);
 	}
 
 	handleKeyUp = (e) => {
@@ -50,6 +50,6 @@ export default class ShortcutManager {
 	  	console.log('sustain active');
 	  	return 
 	  } 
-	  this.$store.player.ReleaseNote(midi);
+	  this.$store.audio.player.ReleaseNote(midi);
 	}
 }
