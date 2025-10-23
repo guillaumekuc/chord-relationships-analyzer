@@ -50,6 +50,7 @@
   import keymap from '../config/keymap.js'
   import keyboardRowPatterns from '../config/keyboardRowPatterns.js'
   import keyboardColorPatterns from '../config/keyboardColorPatterns.js'
+  import { generateKeyboardSlots } from '../utils/keyboardLayout.js'
 
   const props = defineProps({
     startOctave: { type: Number, default: 3 },
@@ -79,60 +80,13 @@
   const midiToKey = computed(() => keymap[configStore.keymap])
 
   const slots = computed(() => {
-    const slots = []
-    const octaveStart = configStore.octaveStart
-    const octaveEnd = configStore.octaveEnd
-    const octaves = octaveEnd - octaveStart
-
-    if (octaves <= 0) { 
-      console.error('invalid range')
-      return []
-    }
-
-    for (let o = 0; o < octaves; o++) {
-      const octave = octaveStart + o
-      let offset = 0
-
-      for (let i = 0; i < pattern.value.length; i++) {
-        const octaveMidi = 12 * (octaveStart + o + 1)
-        const lMidi = octaveMidi + offset
-        
-        const lower = { 
-          note: `${pattern.value[i].l}${octave}`, 
-          midi: Number(lMidi),
-          color: colorPattern.value[offset],
-          keyboard: midiToKey.value[lMidi],
-        }
-        offset++
-
-        let upper = null
-        if (pattern.value[i].u) {
-          const uMidi = octaveMidi + offset
-          upper = { 
-            note: `${pattern.value[i].u}${octave}`,
-            midi: Number(uMidi),
-            color: colorPattern.value[offset],
-            keyboard: midiToKey.value[uMidi],
-          }
-          offset++
-        }
-
-        slots.push({ lower, upper })
-      }
-    }
-
-    const octaveEndMidi = 12 * (octaveEnd + 1)
-    const last = `${pattern.value[0].l}${octaveEnd}`
-
-    slots.push({
-      lower: {
-        note: last, 
-        midi: octaveEndMidi,
-      }, 
-      upper: null
-    })
-
-    return slots
+    return generateKeyboardSlots(
+      configStore.octaveStart,
+      configStore.octaveEnd,
+      pattern.value,
+      colorPattern.value,
+      midiToKey.value
+    )
   })
 </script>
 
