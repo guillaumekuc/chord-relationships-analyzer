@@ -17,13 +17,13 @@
     @pointerleave="onPointerLeave"
   >
     <span
-      :class="{ hidden: !stores.instruments.getInstrument(props.parent).display.keyboardLabels }"
+      :class="{ hidden: !instrumentsStore.getInstrument(props.parent).display.keyboardLabels }"
       class="keyboard-mapping-label"
     >
       {{ props.keyboard }}
     </span>
     <span
-      :class="{ hidden: !stores.instruments.getInstrument(props.parent).display.noteLabels }"
+      :class="{ hidden: !instrumentsStore.getInstrument(props.parent).display.noteLabels }"
       class="note-label"
     >
       {{ props.note }}
@@ -32,13 +32,10 @@
 </template>
 
 <script setup>
-// Vue imports
 import { ref } from 'vue'
+import { usePerformanceStore } from '../store/modules/performance.js'
+import { useInstrumentsStore } from '../store/modules/instruments.js'
 
-// Internal imports
-import { useStores } from '../store'
-
-// Props definition
 const props = defineProps({
   note: { type: String, required: true },
   midi: { type: Number, required: true },
@@ -50,55 +47,42 @@ const props = defineProps({
   parent: { type: String, required: true }
 })
 
-// Store usage
-const stores = useStores()
+const performanceStore = usePerformanceStore()
+const instrumentsStore = useInstrumentsStore()
 
-// Reactive data
 const pressed = ref(false)
 let activePointerId = null
 
-  function onPointerDown(e) {
-    // If it's a mouse, only accept left button (0). Touch/pen don't set button.
-    if (e.button !== undefined && e.button !== 0) return
+function onPointerDown(e) {
+  if (e.button !== undefined && e.button !== 0) return
 
-    activePointerId = e.pointerId;
-    pressed.value = true;
+  activePointerId = e.pointerId
+  pressed.value = true
+  e.currentTarget.setPointerCapture(e.pointerId)
+  performanceStore.noteOn(props.midi)
+}
 
-    // Capture ensures we get the corresponding pointerup/cancel even if the
-    // pointer leaves the element.
-    e.currentTarget.setPointerCapture(e.pointerId);
+function onPointerUp(e) {
+  if (e.pointerId !== activePointerId || !pressed.value) return
 
-    stores.player.pressNote(props.midi)
-  }
+  pressed.value = false
+  activePointerId = null
+  try { e.currentTarget.releasePointerCapture(e.pointerId) } catch {}
+  performanceStore.noteOff(props.midi)
+}
 
-  function onPointerUp(e) {
-    if (e.pointerId !== activePointerId) { return };
-    if (!pressed.value) { return };
+function onPointerCancel(e) {
+  if (e.pointerId !== activePointerId) return
 
-    pressed.value = false;
-    activePointerId = null;
-    // Release capture after we’re done
-    try { e.currentTarget.releasePointerCapture(e.pointerId) } catch {}
+  if (pressed.value) performanceStore.noteOff(props.midi)
+  pressed.value = false
+  activePointerId = null
+  try { e.currentTarget.releasePointerCapture(e.pointerId) } catch {}
+}
 
-    stores.player.releaseNote(props.midi)
-  }
-
-  function onPointerCancel(e) {
-    if (e.pointerId !== activePointerId) return
-
-    // Treat cancel as a release to avoid stuck notes
-    if (pressed.value) stores.player.releaseNote(props.midi)
-
-    pressed.value = false
-    activePointerId = null
-    try { e.currentTarget.releasePointerCapture(e.pointerId) } catch {}
-  }
-
-  function onPointerLeave() {
-    // Optional: do nothing. We still receive pointerup thanks to capture.
-    // If you want hover/visual feedback, you can manage it here,
-    // but do not emit 'release' here.
-  }
+function onPointerLeave() {
+  // No action needed - pointerup will be captured
+}
 </script>
 
   <style scoped>

@@ -3,6 +3,7 @@ import Triads from "../../theory/Triads.js";
 import Intervals from "../../theory/Intervals.js";
 import * as Common from "../../theory/common.js";
 import Helpers from "../../utils/Helpers.js";
+import debugLog from "../../utils/DebugLogger.js";
 
 export const usePerformanceStore = defineStore('performance', {
   state: () => ({
@@ -24,6 +25,7 @@ export const usePerformanceStore = defineStore('performance', {
       if (!this.active.notes.has(note)) {
         this.active.notes.add(note);
         this.active.order.push(note);
+        debugLog(`Note ON: ${note}`);
       }
 
       computeChord(this);
@@ -34,6 +36,7 @@ export const usePerformanceStore = defineStore('performance', {
       if (this.active.notes.has(note)) {
         this.active.notes.delete(note);
         this.active.order = this.active.order.filter(n => n !== note);
+        debugLog(`Note OFF: ${note}`);
       }
 
       computeChord(this);
@@ -42,14 +45,16 @@ export const usePerformanceStore = defineStore('performance', {
 
     validate(config = {}) {
       if (this.active.chord) {
+        debugLog('Valid chord detected:', this.active.chord);
         copyActiveToPassive(this, config);
         clearActive(this);
       } else {
-        console.log('invalid chord');
+        debugLog('Invalid chord');
       }
     },
 
     reset() {
+      debugLog('Resetting performance state');
       clearActive(this);
       clearPassive(this);
     },
@@ -58,8 +63,11 @@ export const usePerformanceStore = defineStore('performance', {
       const lastNote = this.active.order.pop();
       if (lastNote !== undefined) {
         this.active.notes.delete(lastNote);
+        debugLog(`Clearing last note: ${lastNote}`);
         computeChord(this);
         if (config.autotrigger) { this.validate(config); };
+      } else {
+        debugLog('No notes to clear - order is empty');
       }
     },
   },
@@ -69,9 +77,15 @@ function computeChord(performance) {
   const chord = Triads.fromNotes([...performance.active.notes]);
   performance.active.chord = chord;
 
+  // Only log when chord changes
+  if (performance.active.chord !== chord) {
+    debugLog('Chord computed:', chord);
+  }
+
   if (performance.active.chord && performance.passive.chord) {
     const cr = computeCR(performance.active.chord, performance.passive.chord);
     performance.active.cr = cr;
+    debugLog('Chord relationship:', cr);
   } else {
     performance.active.cr = null;
   }
@@ -91,8 +105,7 @@ function computeCR(activeChord, passiveChord) {
 }
 
 function copyActiveToPassive(performance, config = {}) {
-  console.log('copyActiveToPassive');
-  console.log(performance.active);
+  debugLog('Copying active chord to passive');
 
   performance.passive.chord = performance.active.chord;
   performance.passive.notes = new Set(performance.active.notes);

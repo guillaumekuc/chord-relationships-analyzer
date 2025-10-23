@@ -22,11 +22,14 @@
 // Vue imports
 import { ref, onBeforeUnmount } from 'vue'
 
-// Internal imports
-import { useStores } from '../store'
+// Store imports - use direct imports for better performance
+import { usePerformanceStore } from '../store/modules/performance.js'
 
-// Store usage
-const stores = useStores()
+// Utils imports
+import debugLog from '../utils/DebugLogger.js'
+
+// Store usage - direct imports for better performance
+const performanceStore = usePerformanceStore()
 
 // Reactive data
 const isWebMidi = typeof navigator !== 'undefined' && 'requestMIDIAccess' in navigator
@@ -42,11 +45,12 @@ const selectedId = ref('')
     try {
       access.value = await navigator.requestMIDIAccess({ sysex: false });
       isConnected.value = true;
+      debugLog('MIDI connected');
 
       refreshInputs();
       access.value.onstatechange = refreshInputs; // hot-plug updates
     } catch (e) {
-      console.error('Failed to get MIDI access:', String(e));
+      debugLog('Failed to get MIDI access', String(e));
     }
   }
 
@@ -58,6 +62,7 @@ const selectedId = ref('')
       name: i.name,
       manufacturer: i.manufacturer
     }));
+
 
     if (!inputs.value.find(i => i.id === selectedId.value)) {
       selectedId.value = inputs.value[0]?.id || '';
@@ -74,7 +79,9 @@ const selectedId = ref('')
     input.value = selectedId.value ? access.value.inputs.get(selectedId.value) : null;
 
     if (input.value) {
+      debugLog(`MIDI device: ${input.value.name}`);
       input.value.onmidimessage = onMessage;
+    } else {
     }
   }
 
@@ -83,17 +90,22 @@ const selectedId = ref('')
     const type = status & 0xf0;
     const channel = (status & 0x0f) + 1;
 
+
     if (type === 0x90) {
       if (data2 === 0) {
         // Note Off
-        stores.player.releaseNote(data1);
+        debugLog(`MIDI OFF: ${data1}`);
+        performanceStore.noteOff(data1);
       } else {
         // Note On
-        stores.player.pressNote(data1);
+        debugLog(`MIDI ON: ${data1}`);
+        performanceStore.noteOn(data1);
       }
     } else if (type === 0x80) {
       // Note Off
-      stores.player.releaseNote(data1);
+      debugLog(`MIDI OFF: ${data1}`);
+      performanceStore.noteOff(data1);
+    } else {
     }
   }
 

@@ -16,8 +16,8 @@
           :midi="slot.lower.midi"
           :is-upper="false"
           :is-black="slot.lower.color==='b' ? true : false"
-          :is-active="stores.performance.active.notes.has(slot.lower.midi)"
-          :is-passive="stores.performance.passive.notes.has(slot.lower.midi)"
+          :is-active="performanceStore.active.notes.has(slot.lower.midi)"
+          :is-passive="performanceStore.passive.notes.has(slot.lower.midi)"
           :parent="props.id"
         />
 
@@ -28,8 +28,8 @@
           :midi="slot.upper.midi"
           :is-upper="true"
           :is-black="slot.upper.color==='b' ? true : false"
-          :is-active="stores.performance.active.notes.has(slot.upper.midi)"
-          :is-passive="stores.performance.passive.notes.has(slot.upper.midi)"
+          :is-active="performanceStore.active.notes.has(slot.upper.midi)"
+          :is-passive="performanceStore.passive.notes.has(slot.upper.midi)"
           :parent="props.id"
           class="upper-overlay"
         />
@@ -41,116 +41,99 @@
 
 
 <script setup>
-// Vue imports
-import { computed } from 'vue'
+  import { computed } from 'vue'
+  import { usePerformanceStore } from '../store/modules/performance.js'
+  import { useConfigStore } from '../store/modules/config.js'
+  import { useInstrumentsStore } from '../store/modules/instruments.js'
+  import Key from './Key.vue'
+  import KeyboardInspector from './KeyboardInspector.vue'
+  import keymap from '../config/keymap.js'
+  import keyboardRowPatterns from '../config/keyboardRowPatterns.js'
+  import keyboardColorPatterns from '../config/keyboardColorPatterns.js'
 
-// Internal imports
-import { useStores } from '../store'
-import Key from './Key.vue'
-import KeyboardInspector from './KeyboardInspector.vue'
+  const props = defineProps({
+    startOctave: { type: Number, default: 3 },
+    octaves: { type: Number, default: 2 },
+    layout: { type: String, default: 'x66'},
+    colors: {type: String, default: 'x75'},
+    id: {type: String, default: 'something'},
+    displayNoteLabels: {type: Boolean, default: true},
+    displayKeyboardLabels: {type: Boolean, default: false},
+  })
 
-// Config imports
-import keymap from '../config/keymap.js'
-import keyboardRowPatterns from '../config/keyboardRowPatterns.js'
-import keyboardColorPatterns from '../config/keyboardColorPatterns.js'
+  const performanceStore = usePerformanceStore()
+  const configStore = useConfigStore()
+  const instrumentsStore = useInstrumentsStore()
 
-
-// Props definition
-const props = defineProps({
-  startOctave: { type: Number, default: 3 },
-  octaves: { type: Number, default: 2 },
-  layout: { type: String, default: 'x66'},
-  colors: {type: String, default: 'x75'},
-  id: {type: String, default: 'something'},
-  displayNoteLabels: {type: Boolean, default: true},
-  displayKeyboardLabels: {type: Boolean, default: false},
-})
-
-
-// Store usage
-const stores = useStores()
-
-// Initialize instrument in instruments store
-stores.instruments.setInstrument(props.id, {
-  layout: props.layout,
-  colors: props.colors,
-  display: {
-    noteLabels: props.displayNoteLabels,
-    keyboardLabels: props.displayKeyboardLabels,
-  }
-})
-
-// Computed properties
-const layout = computed(() => stores.instruments.getInstrument(props.id).layout)
-const colors = computed(() => stores.instruments.getInstrument(props.id).colors)
-const pattern = computed(() => keyboardRowPatterns[layout.value])
-const colorPattern = computed(() => keyboardColorPatterns[colors.value])
-const midiToKey = computed(() => keymap[stores.config.keymap])
-
-
-// Build slots (each slot renders a white key + a black key on top)
-// 6-6 Keyboard pattern, isomorphic layout.
-const slots = computed(() => {
-  const slots = [];
-  const octaveStart = stores.config.octaveStart;
-  const octaveEnd = stores.config.octaveEnd;
-
-  const octaves = octaveEnd - octaveStart;
-  if (!octaves > 0) { console.error('invalid range'); return; }
-
-  for (let o = 0; o < octaves; o++) {
-    const octave = octaveStart + o;
-
-    let offset = 0;
-    for (let i = 0; i < pattern.value.length; i++) {
-
-      const octaveMidi = 12 * (octaveStart + o + 1); //C0 => 0, C4 => 12 * (4 + 1) = 60
-
-      const lMidi = octaveMidi + offset;
-      const lower = { 
-        note: `${pattern.value[i].l}${octave}`, 
-        midi: Number(lMidi),
-        color: colorPattern.value[offset],
-        keyboard: midiToKey.value[lMidi],
-      };
-
-
-      offset++;
-
-
-      let upper = null;
-      if (pattern.value[i].u) {
-        const uMidi = octaveMidi + offset;
-        upper = { 
-          note: `${pattern.value[i].u}${octave}`,
-          midi: Number(uMidi),
-          color: colorPattern.value[offset],
-          keyboard: midiToKey.value[uMidi],
-        }
-        offset++;
-      }
-
-      slots.push({ lower, upper });
+  instrumentsStore.setInstrument(props.id, {
+    layout: props.layout,
+    colors: props.colors,
+    display: {
+      noteLabels: props.displayNoteLabels,
+      keyboardLabels: props.displayKeyboardLabels,
     }
-  }
+  })
 
-  //final white key to close the pattern
+  const pattern = computed(() => keyboardRowPatterns[instrumentsStore.getInstrument(props.id).layout])
+  const colorPattern = computed(() => keyboardColorPatterns[instrumentsStore.getInstrument(props.id).colors])
+  const midiToKey = computed(() => keymap[configStore.keymap])
 
-  const octaveEndMidi = 12 * (octaveEnd + 1);
-  const last = `${pattern.value[0].l}${octaveEnd}`;
+  const slots = computed(() => {
+    const slots = []
+    const octaveStart = configStore.octaveStart
+    const octaveEnd = configStore.octaveEnd
+    const octaves = octaveEnd - octaveStart
 
-  slots.push({
-    lower: {
-      note: last, 
-      midi: octaveEndMidi,
-    }, 
-    upper: null});
+    if (octaves <= 0) { 
+      console.error('invalid range')
+      return []
+    }
 
-  return slots
-})
+    for (let o = 0; o < octaves; o++) {
+      const octave = octaveStart + o
+      let offset = 0
 
+      for (let i = 0; i < pattern.value.length; i++) {
+        const octaveMidi = 12 * (octaveStart + o + 1)
+        const lMidi = octaveMidi + offset
+        
+        const lower = { 
+          note: `${pattern.value[i].l}${octave}`, 
+          midi: Number(lMidi),
+          color: colorPattern.value[offset],
+          keyboard: midiToKey.value[lMidi],
+        }
+        offset++
 
+        let upper = null
+        if (pattern.value[i].u) {
+          const uMidi = octaveMidi + offset
+          upper = { 
+            note: `${pattern.value[i].u}${octave}`,
+            midi: Number(uMidi),
+            color: colorPattern.value[offset],
+            keyboard: midiToKey.value[uMidi],
+          }
+          offset++
+        }
 
+        slots.push({ lower, upper })
+      }
+    }
+
+    const octaveEndMidi = 12 * (octaveEnd + 1)
+    const last = `${pattern.value[0].l}${octaveEnd}`
+
+    slots.push({
+      lower: {
+        note: last, 
+        midi: octaveEndMidi,
+      }, 
+      upper: null
+    })
+
+    return slots
+  })
 </script>
 
 <style scoped>

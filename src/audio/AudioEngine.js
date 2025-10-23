@@ -1,3 +1,5 @@
+import debugLog from '../utils/DebugLogger.js';
+
 export default class AudioEngine {
   constructor() {
     const Ctor = window.AudioContext || window.webkitAudioContext;
@@ -5,10 +7,15 @@ export default class AudioEngine {
     this.master = this.ctx.createGain();
     this.master.gain.value = 0.9;
     this.master.connect(this.ctx.destination);
+    
   }
 
   playTone(frequency, duration = 1) {
-    if (!Number.isFinite(frequency) || frequency <= 0) return;
+    if (!Number.isFinite(frequency) || frequency <= 0) {
+      debugLog(`Invalid frequency: ${frequency}`);
+      return;
+    }
+
 
     const osc = this.ctx.createOscillator();
     const gain = this.ctx.createGain();
