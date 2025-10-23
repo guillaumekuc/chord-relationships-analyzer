@@ -14,7 +14,6 @@
           :note="slot.lower.note"
           :keyboard="slot.lower.keyboard"
           :midi="slot.lower.midi"
-          :frequency="slot.lower.frequency"
           :is-upper="false"
           :is-black="slot.lower.color==='b' ? true : false"
           :is-active="store.performance.active.notes.has(slot.lower.midi)"
@@ -27,7 +26,6 @@
           :note="slot.upper.note"
           :keyboard="slot.upper.keyboard"
           :midi="slot.upper.midi"
-          :frequency="slot.upper.frequency"
           :is-upper="true"
           :is-black="slot.upper.color==='b' ? true : false"
           :is-active="store.performance.active.notes.has(slot.upper.midi)"
@@ -56,8 +54,6 @@ import keymap from '../config/keymap.js'
 import keyboardRowPatterns from '../config/keyboardRowPatterns.js'
 import keyboardColorPatterns from '../config/keyboardColorPatterns.js'
 
-// Utils imports
-import Convert from '../utils/Convert.js'
 
 // Props definition
 const props = defineProps({
@@ -114,10 +110,8 @@ const slots = computed(() => {
       const lower = { 
         note: `${pattern.value[i].l}${octave}`, 
         midi: Number(lMidi),
-        frequency: Convert.midiToHz(lMidi),
         color: colorPattern.value[offset],
         keyboard: midiToKey.value[lMidi],
-
       };
 
 
@@ -130,7 +124,6 @@ const slots = computed(() => {
         upper = { 
           note: `${pattern.value[i].u}${octave}`,
           midi: Number(uMidi),
-          frequency: Convert.midiToHz(uMidi),
           color: colorPattern.value[offset],
           keyboard: midiToKey.value[uMidi],
         }
@@ -150,7 +143,6 @@ const slots = computed(() => {
     lower: {
       note: last, 
       midi: octaveEndMidi,
-      frequency: Convert.midiToHz(octaveEndMidi),
     }, 
     upper: null});
 
