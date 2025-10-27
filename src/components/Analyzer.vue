@@ -41,6 +41,7 @@ const performanceStore = usePerformanceStore()
     font-weight: bold;
     margin-left:auto;
     margin-right: auto;
+    height: 120px;
   }
 
   .cr-container {
